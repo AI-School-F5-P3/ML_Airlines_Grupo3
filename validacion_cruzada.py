@@ -9,14 +9,14 @@ from sklearn.preprocessing import LabelEncoder
 file_path = 'Airlines_Modified.csv'
 df = pd.read_csv(file_path)
 
-# Preprocesamiento de datos
-df['Arrival Delay in Minutes'].fillna(0, inplace=True)
-df['satisfaction'] = df['satisfaction'].map({'satisfied': 1, 'neutral or dissatisfied': 0})
+# # Preprocesamiento de datos
+# df['Arrival Delay in Minutes'].fillna(0, inplace=True)
+# df['satisfaction'] = df['satisfaction'].map({'satisfied': 1, 'neutral or dissatisfied': 0})
 
-label_encoder = LabelEncoder()
-categorical_columns = ['Gender', 'Customer Type', 'Type of Travel', 'Class']
-for col in categorical_columns:
-    df[col] = label_encoder.fit_transform(df[col])
+# label_encoder = LabelEncoder()
+# categorical_columns = ['Gender', 'Customer Type', 'Type of Travel', 'Class']
+# for col in categorical_columns:
+#     df[col] = label_encoder.fit_transform(df[col])
 
 X = df.drop(columns=['Unnamed: 0', 'id', 'satisfaction'])
 y = df['satisfaction']
