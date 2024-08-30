@@ -8,9 +8,9 @@ from sklearn.metrics import classification_report, confusion_matrix, roc_auc_sco
 file_path = 'Airlines_Modified.csv'
 df = pd.read_csv(file_path)
 
-# Preprocesamiento
-df['satisfaction'] = df['satisfaction'].map({'satisfied': 1, 'neutral or dissatisfied': 0})
-df.dropna(subset=['satisfaction'], inplace=True)
+# # Preprocesamiento
+# df['satisfaction'] = df['satisfaction'].map({'satisfied': 1, 'neutral or dissatisfied': 0})
+# df.dropna(subset=['satisfaction'], inplace=True)
 
 # Codificación de variables categóricas
 label_encoder = LabelEncoder()
@@ -34,6 +34,12 @@ def collect_data_and_predict():
     print("Por favor, ingrese los siguientes datos (de 0 a 5 para los servicios y números para los demás campos):")
 
     # Datos numéricos del cliente
+    gender = int(input("Gender (Male:1/Female:0): "))
+    customer_type = int(input("Customer Type (Loyal Customer:0/Disloyal Customer:1): "))
+    age = int(input("Age (0-120): "))
+    type_of_travel = int(input("Type of Travel (Personal Travel:1/Business Travel:0): "))
+    flight_class = int(input(("Class (Eco Plus:2/Business:0/Eco:1): ")))
+    flight_distance = int(input("Flight Distance: "))
     inflight_wifi_service = int(input("Inflight wifi service (0-5): "))
     departure_arrival_time_convenient = int(input("Departure/Arrival time convenient (0-5): "))
     ease_of_online_booking = int(input("Ease of Online booking (0-5): "))
@@ -48,33 +54,26 @@ def collect_data_and_predict():
     checkin_service = int(input("Checkin service (0-5): "))
     inflight_service = int(input("Inflight service (0-5): "))
     cleanliness = int(input("Cleanliness (0-5): "))
+    departure_delay = int(input("Departure Delay in Minutes: "))
+    arrival_delay = int(input("Arrival Delay in Minutes: "))
+   
+       
 
-    # Datos categóricos del cliente
-    gender = input("Gender (Male/Female): ")
-    customer_type = input("Customer Type (Loyal Customer/Disloyal Customer): ")
-    age = int(input("Age (0-120): "))
-    type_of_travel = input("Type of Travel (Personal Travel/Business Travel): ")
-    flight_distance = float(input("Flight Distance: "))
-    departure_delay = float(input("Departure Delay in Minutes: "))
-    arrival_delay = float(input("Arrival Delay in Minutes: "))
-    flight_class = input("Class (Eco Plus/Business/Eco): ")
-
-    # Codificación de datos categóricos
-    gender_encoded = label_encoder.transform([gender])[0]
-    customer_type_encoded = label_encoder.transform([customer_type])[0]
-    type_of_travel_encoded = label_encoder.transform([type_of_travel])[0]
-    flight_class_encoded = label_encoder.transform([flight_class])[0]
+    # # Codificación de datos categóricos
+    # gender_encoded = label_encoder.transform([gender])[0]
+    # customer_type_encoded = label_encoder.transform([customer_type])[0]
+    # type_of_travel_encoded = label_encoder.transform([type_of_travel])[0]
+    # flight_class_encoded = label_encoder.transform([flight_class])[0]
 
     # Crear DataFrame para las entradas del cliente
     client_data = pd.DataFrame({
-        'Gender': [gender_encoded],
-        'Customer Type': [customer_type_encoded],
-        'Type of Travel': [type_of_travel_encoded],
-        'Class': [flight_class_encoded],
+        'Gender': [gender],
+        'Customer Type': [customer_type],
+        'Age':[age],
+        'Type of Travel': [type_of_travel],
+        'Class': [flight_class],
         'Flight Distance': [flight_distance],
-        'Arrival Delay in Minutes': [arrival_delay],
-        'Departure Delay in Minutes': [departure_delay],
-        'Inflight wifi service': [inflight_wifi_service],
+        'Inflight wifi service': [inflight_wifi_service],              
         'Departure/Arrival time convenient': [departure_arrival_time_convenient],
         'Ease of Online booking': [ease_of_online_booking],
         'Gate location': [gate_location],
@@ -87,7 +86,9 @@ def collect_data_and_predict():
         'Baggage handling': [baggage_handling],
         'Checkin service': [checkin_service],
         'Inflight service': [inflight_service],
-        'Cleanliness': [cleanliness]
+        'Cleanliness': [cleanliness],
+        'Departure Delay in Minutes': [departure_delay],
+        'Arrival Delay in Minutes': [arrival_delay]
     })
 
     # Verificar los datos del cliente
