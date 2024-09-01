@@ -13,7 +13,7 @@ ML_Airlines_Grupo3/
 │   └── utils.py                     # Utilidades adicionales (opcional)
 │
 ├── frontend/                        # Directorio principal del frontend
-│   └── streamlit.py             # Código de la aplicación Streamlit
+│   └── streamlit.py                 # Código de la aplicación Streamlit
 │
 ├── models/                          # Directorio para los modelos entrenados
 │   └── model.pkl                    # Archivo del modelo entrenado
