@@ -15,6 +15,8 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import plot_tree
 from IPython.display import display, HTML
+import joblib
+import os
 
 
 
@@ -88,7 +90,7 @@ scaler = RobustScaler()
 
 # Aplicar el escalado a las columnas numéricas
 df[numeric_features] = scaler.fit_transform(df[numeric_features])
-
+print(df[numeric_features])
 
 #Escalamiento de variables categóricas nominales:
 
@@ -102,7 +104,7 @@ encoder = OneHotEncoder(drop="first")
 encoded_columns = pd.DataFrame(encoder.fit_transform(df[categorical_features]).toarray(), columns=encoder.get_feature_names_out(categorical_features))
 df = pd.concat([df, encoded_columns], axis=1)
 df.drop(categorical_features, axis=1, inplace=True)
-
+print(df)
 
 
 #Escalamiento de variables categóricas ordinales:
@@ -118,7 +120,7 @@ ordinal_encoder = OrdinalEncoder(categories=class_categories)
 
 # Aplicar el escalado a la columna categórica ordinal
 df[ordinal_features] = ordinal_encoder.fit_transform(df[ordinal_features])
-
+print(df[ordinal_features])
 
 #Codificación de etiquetas en variable objetivo:
 
@@ -128,12 +130,19 @@ target_feature = ["satisfaction"]
 print(df[target_feature].head())
 print(df[target_feature].shape)
 
+target_feature = "satisfaction"
+if isinstance(df[target_feature], pd.DataFrame):
+    df[target_feature] = df[target_feature].squeeze()  # Convierte a Serie si es un DataFrame
+
+
 
 # Crear un objeto LabelEncoder
 label_encoder = LabelEncoder()
 
 # Aplicar el escalado a la variable objetivo
 df[target_feature] = label_encoder.fit_transform(df[target_feature])
+
+print(df[target_feature].shape)  # Debería ser (n_samples,)
 
 
 
@@ -304,3 +313,27 @@ probs_df = pd.DataFrame(probs, columns=['Probabilidad_neutral_or_dissatisfied', 
 
 # Mostrar la tabla desplazable
 display(HTML(probs_df.to_html()))
+
+
+#Guardar el Modelo y Escaladores
+# Guardar el modelo
+joblib.dump(best_decision_tree, 'best_decision_tree_model.pkl')
+
+# Guardar el escalador
+joblib.dump(scaler, 'scaler.pkl')
+
+# Guardar el codificador ordinal
+joblib.dump(ordinal_encoder, 'ordinal_encoder.pkl')
+
+# Guardar el codificador one-hot
+joblib.dump(encoder, 'onehot_encoder.pkl')
+
+
+
+files = ['best_decision_tree_model.pkl', 'scaler.pkl', 'ordinal_encoder.pkl', 'onehot_encoder.pkl']
+
+for file in files:
+    if os.path.exists(file):
+        print(f"{file} se ha guardado correctamente.")
+    else:
+        print(f"{file} NO se ha guardado.")
