@@ -2,7 +2,8 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
+
 
 # Cargar el archivo CSV proporcionado
 file_path = 'data/airline_clean_data1.csv'
@@ -10,7 +11,7 @@ df = pd.read_csv(file_path)
 
 
 # Dividimos el dataset en características (X) y variable objetivo (y)
-X = df.drop(columns=['Unnamed: 0', 'id', 'satisfaction'])
+X = df.drop(columns=['satisfaction'])
 y = df['satisfaction']
 
 # Dividimos los datos en conjuntos de entrenamiento y prueba (80% entrenamiento, 20% prueba)
@@ -30,3 +31,6 @@ print("Random Forest Confusion Matrix:")
 print(confusion_matrix(y_test, y_pred_rf))
 print("Random Forest AUC-ROC Score:", roc_auc_score(y_test, y_pred_rf))
 
+#Verificación adicional sobre la precisión del modelo
+accuracy = accuracy_score(y_test,y_pred_rf)
+print(f"La exactitud del modelo de clasificación es de {accuracy * 100:.2f}%")

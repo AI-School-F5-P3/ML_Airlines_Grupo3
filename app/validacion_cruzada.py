@@ -10,7 +10,7 @@ file_path = 'data/airline_clean_data1.csv'
 df = pd.read_csv(file_path)
 
 
-X = df.drop(columns=['Unnamed: 0', 'id', 'satisfaction'])
+X = df.drop(columns=['satisfaction'])
 y = df['satisfaction']
 
 # Configurar la validación cruzada con K-Fold
