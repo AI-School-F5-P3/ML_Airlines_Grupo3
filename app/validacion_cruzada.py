@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 
 
 # Cargar el archivo CSV proporcionado
-file_path = 'data/Airlines_Modified.csv'
+file_path = 'data/airline_clean_data1.csv'
 df = pd.read_csv(file_path)
 
 
