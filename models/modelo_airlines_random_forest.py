@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
 
 # Cargar el archivo CSV proporcionado
-file_path = 'Airlines_Modified.csv'
+file_path = 'data/Airlines_Modified.csv'
 df = pd.read_csv(file_path)
 
 

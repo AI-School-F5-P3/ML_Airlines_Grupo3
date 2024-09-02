@@ -3,20 +3,12 @@ import pandas as pd
 from sklearn.model_selection import KFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import LabelEncoder
+
 
 # Cargar el archivo CSV proporcionado
-file_path = 'Airlines_Modified.csv'
+file_path = 'data/Airlines_Modified.csv'
 df = pd.read_csv(file_path)
 
-# # Preprocesamiento de datos
-# df['Arrival Delay in Minutes'].fillna(0, inplace=True)
-# df['satisfaction'] = df['satisfaction'].map({'satisfied': 1, 'neutral or dissatisfied': 0})
-
-# label_encoder = LabelEncoder()
-# categorical_columns = ['Gender', 'Customer Type', 'Type of Travel', 'Class']
-# for col in categorical_columns:
-#     df[col] = label_encoder.fit_transform(df[col])
 
 X = df.drop(columns=['Unnamed: 0', 'id', 'satisfaction'])
 y = df['satisfaction']
