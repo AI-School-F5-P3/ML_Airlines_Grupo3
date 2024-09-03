@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
+import joblib
 
 
 # Cargar el archivo CSV proporcionado
@@ -34,3 +35,7 @@ print("Random Forest AUC-ROC Score:", roc_auc_score(y_test, y_pred_rf))
 #Verificación adicional sobre la precisión del modelo
 accuracy = accuracy_score(y_test,y_pred_rf)
 print(f"La exactitud del modelo de clasificación es de {accuracy * 100:.2f}%")
+
+# Guardar el modelo en un archivo
+joblib.dump(rf_model, 'models/rf_model.pkl')
+print("Modelo guardado como rf_model.pkl")

@@ -6,6 +6,7 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
+import joblib
 
 # Cargar el archivo CSV proporcionado
 file_path = 'data/airline_modified_knn.csv'
@@ -70,3 +71,7 @@ print("KNN AUC-ROC Score (Mejor Modelo):", roc_auc_score(y_test, y_pred_best_knn
 # Verificación adicional sobre la precisión del mejor modelo
 best_accuracy = accuracy_score(y_test, y_pred_best_knn)
 print(f"La exactitud del mejor modelo KNN es de {best_accuracy * 100:.2f}%")
+
+# Guardar el modelo en un archivo
+joblib.dump(best_knn_model, 'models/knn_model.pkl')
+print("Modelo guardado como knn_model.pkl")
