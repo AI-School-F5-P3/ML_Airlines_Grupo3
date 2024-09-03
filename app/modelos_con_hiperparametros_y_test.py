@@ -11,7 +11,7 @@ file_path = 'data/airline_passenger_satisfaction_model.csv'
 df = pd.read_csv(file_path)
 
 # Separar características y etiquetas
-X = df.drop(columns=['satisfaction'])
+X = df.drop(columns=['Arrival Delay in Minutes','satisfaction'])
 y = df['satisfaction']
 
 # Dividir los datos en conjunto de entrenamiento y conjunto de prueba
