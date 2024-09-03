@@ -7,7 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
 
 # Cargar el archivo CSV proporcionado
-file_path = 'data/airline_passenger_satisfaction_model.csv'
+file_path = 'data/airline_modified_knn.csv'
 df = pd.read_csv(file_path)
 
 # Dividimos el dataset en características (X) y variable objetivo (y)
