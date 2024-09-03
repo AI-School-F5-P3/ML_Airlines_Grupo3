@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report, confusion_matrix, roc_auc_sco
 
 
 # Cargar el archivo CSV proporcionado
-file_path = 'data/airline_clean_data1.csv'
+file_path = 'data/airline_passenger_satisfaction_model.csv'
 df = pd.read_csv(file_path)
 
 
