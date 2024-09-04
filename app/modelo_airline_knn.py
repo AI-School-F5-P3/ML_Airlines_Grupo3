@@ -96,7 +96,7 @@ print("Modelo guardado como knn_model.pkl")
 
 #Métricas
 metricsdf = pd.DataFrame({
-    'Model': ['LR'],
+    'Model': ['KNN'],
     'Accuracy': [accuracy_score],
     'Precision': [precision],
     'Recall': [recall],
@@ -119,8 +119,8 @@ print("Métricas guardadas en 'model_metrics.csv'")
 plt.figure(figsize=(10, 6))
 sns.barplot(x=['Accuracy', 'Precision', 'Recall', 'F1_Score', 'AUC_ROC'], 
             y=[accuracy, precision, recall, f1, roc_auc_score])
-plt.title('Métricas del Modelo Logistic Regresion')
+plt.title('Métricas del Modelo KNN Vecinos Cercanos')
 plt.ylim(0, 1)
-plt.savefig('lr_metrics.png')
+plt.savefig('knn_metrics.png')
 plt.close()
-print("Gráfico de métricas guardado como 'lr_metrics.png'")
+print("Gráfico de métricas guardado como 'knn_metrics.png'")
