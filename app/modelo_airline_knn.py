@@ -1,12 +1,12 @@
-# Importamos las bibliotecas necesarias
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score, precision_score, recall_score, f1_score
 import joblib
+import seaborn as sns
 
 # Cargar el archivo CSV proporcionado
 file_path = 'data/airline_modified_knn.csv'
@@ -16,7 +16,7 @@ df = pd.read_csv(file_path)
 print("Valores faltantes por columna:")
 print(df.isnull().sum())
 
-print("Hay valores infinitos en el dataset?:", np.isinf(df).values.any())
+print("¿Hay valores infinitos en el dataset?:", np.isinf(df).values.any())
 
 # Si hay valores faltantes (NaN), podrías llenarlos o eliminarlos
 # Ejemplo: rellenar con la mediana (o podrías usar la media o eliminar filas)
@@ -72,6 +72,55 @@ print("KNN AUC-ROC Score (Mejor Modelo):", roc_auc_score(y_test, y_pred_best_knn
 best_accuracy = accuracy_score(y_test, y_pred_best_knn)
 print(f"La exactitud del mejor modelo KNN es de {best_accuracy * 100:.2f}%")
 
+# Realizar validación cruzada con el mejor modelo
+cv_scores = cross_val_score(best_knn_model, X_train, y_train, cv=5, scoring='accuracy')
+print("\nResultados de la Validación Cruzada:")
+print(f"Exactitudes por fold: {cv_scores}")
+print(f"Exactitud media en la validación cruzada: {np.mean(cv_scores) * 100:.2f}%")
+print(f"Desviación estándar de la exactitud: {np.std(cv_scores) * 100:.2f}%")
+
+# Cálculo de métricas adicionales
+precision = precision_score(y_test, y_pred_best_knn, average='binary')  # Cambia 'binary' según el tipo de clasificación
+recall = recall_score(y_test, y_pred_best_knn, average='binary')
+f1 = f1_score(y_test, y_pred_best_knn, average='binary')
+
+
+# Verificación adicional sobre la precisión del modelo
+accuracy = accuracy_score(y_test, y_pred_best_knn)
+print(f"La exactitud del modelo KNN es de {accuracy * 100:.2f}%")
+
 # Guardar el modelo en un archivo
 joblib.dump(best_knn_model, 'models/knn_model.pkl')
 print("Modelo guardado como knn_model.pkl")
+
+
+#Métricas
+metricsdf = pd.DataFrame({
+    'Model': ['LR'],
+    'Accuracy': [accuracy_score],
+    'Precision': [precision],
+    'Recall': [recall],
+    'F1_Score': [f1],
+    'AUC_ROC': [roc_auc_score],
+    'Best_Parameters': [str(grid_search.best_params_)]
+})
+
+#Carga de df
+try:
+    existing_metrics = pd.read_csv('model_metrics.csv')
+    updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
+except FileNotFoundError:
+    updated_metrics = metricsdf
+
+updated_metrics.to_csv('model_metrics.csv', index=False)
+print("Métricas guardadas en 'model_metrics.csv'")
+
+# Visualización
+plt.figure(figsize=(10, 6))
+sns.barplot(x=['Accuracy', 'Precision', 'Recall', 'F1_Score', 'AUC_ROC'], 
+            y=[accuracy, precision, recall, f1, roc_auc_score])
+plt.title('Métricas del Modelo Logistic Regresion')
+plt.ylim(0, 1)
+plt.savefig('lr_metrics.png')
+plt.close()
+print("Gráfico de métricas guardado como 'lr_metrics.png'")
