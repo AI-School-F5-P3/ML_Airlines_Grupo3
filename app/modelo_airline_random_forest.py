@@ -57,9 +57,6 @@ precision = precision_score(y_test, y_pred_rf, average='binary')  # Cambia 'bina
 recall = recall_score(y_test, y_pred_rf, average='binary')
 f1 = f1_score(y_test, y_pred_rf, average='binary')
 
-# Modelo de Random Forest
-rf_model = RandomForestClassifier(random_state=42)
-
 # Evaluar el modelo utilizando validación cruzada
 cv_scores_rf = cross_val_score(rf_model, X, y, cv=kf, scoring='accuracy')
 
