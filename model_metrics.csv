@@ -1,2 +1,2 @@
 Model,Accuracy,Precision,Recall,F1_Score,AUC_ROC,Best_Parameters
-RF,<function accuracy_score at 0x000002431EDCCF40>,0.9507042253521126,0.9278350515463918,0.9391304347826087,<function roc_auc_score at 0x000002431EDF4540>,"{'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}"
+RF,0.9475,0.950704225352113,0.927835051546392,0.939130434782609,0.989626180667994,"{'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}"
