@@ -7,24 +7,19 @@ import matplotlib.pyplot as plt
 import joblib
 import seaborn as sns
 
-
 # Cargar el archivo CSV proporcionado
 file_path = 'data/airline_passenger_satisfaction_model.csv'
 df = pd.read_csv(file_path)
-
 
 # Dividimos el dataset en características (X) y variable objetivo (y)
 X = df.drop(columns=['satisfaction'])
 y = df['satisfaction']
 
-
 # Dividir los datos en conjunto de entrenamiento y conjunto de prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-
 # Configurar la validación cruzada con K-Fold
 kf = KFold(n_splits=5, shuffle=True, random_state=42)  # 5-fold cross-validation
-
 
 # Definir el espacio de búsqueda de hiperparámetros para Regresión Logística
 param_grid_lr = {
@@ -58,8 +53,6 @@ accuracy = accuracy_score(y_test, y_pred_lr)
 precision = precision_score(y_test, y_pred_lr, average='binary')  # Cambia 'binary' según el tipo de clasificación
 recall = recall_score(y_test, y_pred_lr, average='binary')
 f1 = f1_score(y_test, y_pred_lr, average='binary')
-
-
 
 # Modelo de Regresión Logística
 log_reg_model = LogisticRegression(max_iter=1000, random_state=42)
@@ -101,7 +94,7 @@ metricsdf = pd.DataFrame({
     'Best_Parameters': [str(grid_search_lr.best_params_)]
 })
 
-#Carga de df
+# Cargar métricas existentes (si las hay) y guardar en un archivo CSV
 try:
     existing_metrics = pd.read_csv('model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
