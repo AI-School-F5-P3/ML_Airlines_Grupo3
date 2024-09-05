@@ -2,10 +2,11 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_predict, cross_val_score
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score, accuracy_score, f1_score
+from sklearn.metrics import confusion_matrix, roc_curve, roc_auc_score, accuracy_score, f1_score, precision_score,recall_score
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 import time
+import joblib
 
 # Cargar y preparar los datos
 print("Cargando datos...")
@@ -58,19 +59,28 @@ f1 = f1_score(y, y_pred, average='weighted')
 print(f'Mejores parámetros encontrados para SVM: {grid_search_svm.best_params_}')
 print(f'Precisión media de validación cruzada: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})')
 print(f'Precisión: {accuracy:.4f}')
+print(f'Precisión: {precision_score:.4f}')
 print(f'Puntuación F1: {f1:.4f}')
 print(f'Matriz de confusión:\n{conf_matrix}')
 print(f'ROC AUC: {roc_auc:.4f}')
 
+
+
+
+# Guardar el modelo en un archivo
+joblib.dump(svm_model, 'models/svm_model.pkl')
+print("Modelo guardado como svm_model.pkl")
 # Guardar resultados
 results = pd.DataFrame({
     'Model': ['SVM (10000 muestras)'],
+    'Accuracy': [accuracy_score],
+    #'CV Accuracy Mean': [cv_scores.mean()],
+    #'CV Accuracy Std': [cv_scores.std()],
+    'Precision': [precision_score],
+    'Recall': [recall_score],
+    'F1 Score': [f1],
+    'ROC AUC': [roc_auc],
     'Best Parameters': [grid_search_svm.best_params_],
-    'CV Accuracy Mean': [cv_scores.mean()],
-    'CV Accuracy Std': [cv_scores.std()],
-    'Test Accuracy': [accuracy],
-    'Test F1 Score': [f1],
-    'ROC AUC': [roc_auc]
 })
 results.to_csv('svm_classification_results_10000_samples.csv', index=False)
 print("Resultados guardados en 'svm_classification_results_10000_samples.csv'")
