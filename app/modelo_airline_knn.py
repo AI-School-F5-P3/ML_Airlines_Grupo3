@@ -80,14 +80,12 @@ print(f"Exactitud media en la validación cruzada: {np.mean(cv_scores) * 100:.2f
 print(f"Desviación estándar de la exactitud: {np.std(cv_scores) * 100:.2f}%")
 
 # Cálculo de métricas adicionales
+accuracy = accuracy_score(y_test, y_pred_best_knn)
 precision = precision_score(y_test, y_pred_best_knn, average='binary')  # Cambia 'binary' según el tipo de clasificación
 recall = recall_score(y_test, y_pred_best_knn, average='binary')
 f1 = f1_score(y_test, y_pred_best_knn, average='binary')
+roc_auc= roc_auc_score(y_test, y_pred_best_knn)
 
-
-# Verificación adicional sobre la precisión del modelo
-accuracy = accuracy_score(y_test, y_pred_best_knn)
-print(f"La exactitud del modelo KNN es de {accuracy * 100:.2f}%")
 
 # Guardar el modelo en un archivo
 joblib.dump(best_knn_model, 'models/knn_model.pkl')
@@ -97,11 +95,11 @@ print("Modelo guardado como knn_model.pkl")
 #Métricas
 metricsdf = pd.DataFrame({
     'Model': ['KNN'],
-    'Accuracy': [accuracy_score],
+    'Accuracy': [accuracy],
     'Precision': [precision],
     'Recall': [recall],
     'F1_Score': [f1],
-    'AUC_ROC': [roc_auc_score],
+    'AUC_ROC': [roc_auc],
     'Best_Parameters': [str(grid_search.best_params_)]
 })
 
@@ -118,7 +116,7 @@ print("Métricas guardadas en 'model_metrics.csv'")
 # Visualización
 plt.figure(figsize=(10, 6))
 sns.barplot(x=['Accuracy', 'Precision', 'Recall', 'F1_Score', 'AUC_ROC'], 
-            y=[accuracy, precision, recall, f1, roc_auc_score])
+            y=[accuracy, precision, recall, f1, roc_auc])
 plt.title('Métricas del Modelo KNN Vecinos Cercanos')
 plt.ylim(0, 1)
 plt.savefig('knn_metrics.png')

@@ -50,12 +50,15 @@ print("Best parameters found for Logistic Regression:", grid_search_lr.best_para
 print("Logistic Regression Test Accuracy:", accuracy_score(y_test, y_pred_lr))
 print("Logistic Regression Confusion Matrix:\n", confusion_matrix(y_test, y_pred_lr))
 print("Logistic Regression Classification Report:\n", classification_report(y_test, y_pred_lr)) # Reporte de clasificación (incluye precision, recall y f1-score)
-print("Logistic Regression AUC:", roc_auc_score(y_test, best_lr_model.predict_proba(X_test)[:, 1]))
+roc_auc = roc_auc_score(y_test, best_lr_model.predict_proba(X_test)[:, 1])
+print("Logistic Regresion AUC:", roc_auc)
 
 # Cálculo de métricas adicionales
+accuracy = accuracy_score(y_test, y_pred_lr)
 precision = precision_score(y_test, y_pred_lr, average='binary')  # Cambia 'binary' según el tipo de clasificación
 recall = recall_score(y_test, y_pred_lr, average='binary')
 f1 = f1_score(y_test, y_pred_lr, average='binary')
+
 
 
 # Modelo de Regresión Logística
@@ -83,10 +86,6 @@ plt.title('Receiver Operating Characteristic (ROC) Curve')
 plt.legend(loc="lower right")
 plt.show()
 
-# Verificación adicional sobre la precisión del modelo
-accuracy = accuracy_score(y_test, y_pred_lr)
-print(f"La exactitud del modelo Logistic Regresion es de {accuracy * 100:.2f}%")
-
 # Guardar el modelo en un archivo
 joblib.dump(log_reg_model, 'models/lr_model.pkl')
 print("Modelo guardado como lr_model.pkl")
@@ -94,11 +93,11 @@ print("Modelo guardado como lr_model.pkl")
 #Métricas
 metricsdf = pd.DataFrame({
     'Model': ['LR'],
-    'Accuracy': [accuracy_score],
+    'Accuracy': [accuracy],
     'Precision': [precision],
     'Recall': [recall],
     'F1_Score': [f1],
-    'AUC_ROC': [roc_auc_score],
+    'AUC_ROC': [roc_auc],
     'Best_Parameters': [str(grid_search_lr.best_params_)]
 })
 
@@ -115,7 +114,7 @@ print("Métricas guardadas en 'model_metrics.csv'")
 # Visualización
 plt.figure(figsize=(10, 6))
 sns.barplot(x=['Accuracy', 'Precision', 'Recall', 'F1_Score', 'AUC_ROC'], 
-            y=[accuracy, precision, recall, f1, roc_auc_score])
+            y=[accuracy, precision, recall, f1, roc_auc])
 plt.title('Métricas del Modelo Logistic Regresion')
 plt.ylim(0, 1)
 plt.savefig('lr_metrics.png')
