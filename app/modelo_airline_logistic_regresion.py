@@ -96,12 +96,12 @@ metricsdf = pd.DataFrame({
 
 # Cargar métricas existentes (si las hay) y guardar en un archivo CSV
 try:
-    existing_metrics = pd.read_csv('model_metrics.csv')
+    existing_metrics = pd.read_csv('metrics/model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
 except FileNotFoundError:
     updated_metrics = metricsdf
 
-updated_metrics.to_csv('model_metrics.csv', index=False)
+updated_metrics.to_csv('metrics/model_metrics.csv', index=False)
 print("Métricas guardadas en 'model_metrics.csv'")
 
 # Visualización
@@ -110,6 +110,6 @@ sns.barplot(x=['Accuracy', 'Precision', 'Recall', 'F1_Score', 'AUC_ROC'],
             y=[accuracy, precision, recall, f1, roc_auc])
 plt.title('Métricas del Modelo Logistic Regresion')
 plt.ylim(0, 1)
-plt.savefig('lr_metrics.png')
+plt.savefig('metrics/lr_metrics.png')
 plt.close()
 print("Gráfico de métricas guardado como 'lr_metrics.png'")
