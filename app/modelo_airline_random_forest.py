@@ -53,7 +53,7 @@ print("Iniciando búsqueda de hiperparámetros...")
 start_time = time.time()
 grid_search_rf = GridSearchCV(estimator=rf_model, param_grid=param_grid_rf, cv=kf, scoring='accuracy', n_jobs=-1, verbose=2)
 
-# Entrenar el modelo de Random Forest con la búsqueda de hiperparámetros
+
 grid_search_rf.fit(X_sample, y_sample)
 end_time = time.time()
 
@@ -104,7 +104,7 @@ print("Modelo guardado como rf_model.pkl")
 
 
 
-results = pd.DataFrame({
+metricsdf = pd.DataFrame({
     'Model': ['Random Forest'],
     'Accuracy': [accuracy],
     'Precision': [precision],
@@ -113,8 +113,16 @@ results = pd.DataFrame({
     'ROC AUC': [roc_auc],
     'Best Parameters': [grid_search_rf.best_params_],
 })
-results.to_csv('rf_classification_results.csv', index=False)
+metricsdf.to_csv('rf_classification_results.csv', index=False)
+#Carga de df
+try:
+    existing_metrics = pd.read_csv('model_metrics.csv')
+    updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
+except FileNotFoundError:
+    updated_metrics = metricsdf
 
+updated_metrics.to_csv('model_metrics.csv', index=False)
+print("Métricas guardadas en 'model_metrics.csv'")
 plt.figure()
 plt.plot(fpr_rf, tpr_rf, color='blue', lw=2, label=f'Random Forest (AUC = {roc_auc:.2f})')
 plt.plot([0, 1], [0, 1], color='red', lw=2, linestyle='--')
