@@ -75,7 +75,15 @@ results = pd.DataFrame({
     'Best Parameters': [grid_search.best_params_],
 })
 results.to_csv('knn_classification_results.csv', index=False)
+# Actualizar el archivo CSV de métricas
+try:
+    existing_metrics = pd.read_csv('model_metrics.csv')
+    updated_metrics = pd.concat([existing_metrics, results], ignore_index=True)
+except FileNotFoundError:
+    updated_metrics = results
 
+updated_metrics.to_csv('model_metrics.csv', index=False)
+print("Métricas guardadas en 'model_metrics.csv'")
 # Guardar la curva ROC
 plt.figure()
 plt.plot(fpr, tpr, color='blue', lw=2, label=f'KNN (AUC = {roc_auc:.2f})')
