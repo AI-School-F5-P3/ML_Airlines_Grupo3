@@ -8,10 +8,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Obtener la URL de la base de datos desde las variables de entorno
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
 # Crear el motor de SQLAlchemy
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 # Crear una clase de sesión local
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
