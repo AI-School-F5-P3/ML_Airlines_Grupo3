@@ -1,10 +1,7 @@
 from pydantic import BaseModel
 
 class Questions_passenger_satisfactionBase(BaseModel):
-    """
-    Esquema Pydantic base para la satisfacción del pasajero.
-    Define todos los campos comunes.
-    """
+  
     gender: int
     customer_type: str
     age: int
@@ -30,18 +27,11 @@ class Questions_passenger_satisfactionBase(BaseModel):
     passenger_satisfaction: str
 
 class Questions_passenger_satisfactionCreate(Questions_passenger_satisfactionBase):
-    """
-    Esquema Pydantic para la creación de un nuevo registro de satisfacción.
-    Hereda todos los campos de Questions_passenger_satisfactionBase.
-    No incluye el campo 'id' ya que este será generado por la base de datos.
-    """
+   
     pass
 
 class Questions_passenger_satisfaction(Questions_passenger_satisfactionBase):
-    """
-    Esquema Pydantic para la respuesta completa de satisfacción del pasajero.
-    Incluye todos los campos de Questions_passenger_satisfactionBase más el 'id'.
-    """
+   
     id: int
 
     class Config:
