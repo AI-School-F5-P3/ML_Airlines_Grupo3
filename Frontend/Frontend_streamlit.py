@@ -16,6 +16,7 @@ satisfaction_scale = {
     'Excelente': 5
 }
 
+
 # Crear la interfaz de Streamlit
 st.title("Formulario de Satisfacción del Pasajero")
 
@@ -93,6 +94,10 @@ input_data['departure_delay_in_minutes'] = departure_delay
 # Entrada para el retraso de llegada (en minutos)
 arrival_delay = st.slider("Retraso en la Llegada (en minutos):", 0, 1000, 0, key="arrival_delay")
 input_data['arrival_delay_in_minutes'] = arrival_delay
+
+# Entrada para la satisfaccion
+satisfaction_client = st.slider("Porfavor diganos si esta:" ("satisfecho, insatisfecho/neutral"))
+input_data['satisfaction'] = satisfaction
 
 # Función para enviar datos a la API FastAPI
 def send_data_to_api(data):
