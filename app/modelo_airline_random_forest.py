@@ -13,9 +13,7 @@ import time
 file_path = 'data/airline_passenger_satisfaction_model.csv'
 df = pd.read_csv(file_path)
 
-# Usar una muestra de 10.000 filas
-sample_size = 10000
-df_sample = shuffle(df, random_state=42).iloc[:sample_size]
+
 
 # Usar una muestra de 10.000 filas para la búsqueda de hiperparámetros
 sample_size = 10000
