@@ -54,31 +54,54 @@ best_svm_model.fit(X_train, y_train)
 
 # Realizar predicciones en el conjunto de prueba
 y_pred = best_svm_model.predict(X_test)
+y_pred_proba = best_svm_model.decision_function(X_test)
 
 # Calcular métricas
 conf_matrix = confusion_matrix(y_test, y_pred)
+fpr, tpr, _ = roc_curve(y_test, y_pred_proba)
+roc_auc = roc_auc_score(y_test, y_pred_proba)
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred, pos_label=1)
 recall = recall_score(y_test, y_pred, pos_label=1)
 f1 = f1_score(y_test, y_pred, pos_label=1)
 
-# Para ROC AUC, usamos las puntuaciones de decisión
-y_score = best_svm_model.decision_function(X_test)
-fpr, tpr, _ = roc_curve(y_test, y_score)
-roc_auc = roc_auc_score(y_test, y_score)
+# Mostrar resultados
+print(f'Mejores parámetros encontrados para SVM: {grid_search_svm.best_params_}')
+print(f'Precisión: {accuracy:.4f}')
+print(f'Precisión (Precision): {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+print(f'Puntuación F1: {f1:.4f}')
+print(f'ROC AUC: {roc_auc:.4f}')
+print(f'Matriz de confusión:\n{conf_matrix}')
 
-# Imprimir los resultados
-print(f"La exactitud del modelo SVM es de {accuracy * 100:.2f}%")
-print(f"Precisión: {precision:.4f}")
-print(f"Recall: {recall:.4f}")
-print(f"F1-score: {f1:.4f}")
-print(f"ROC AUC: {roc_auc:.4f}")
+# Guardar el modelo en un archivo
+joblib.dump(best_svm_model, 'models/svm_model.pkl')
+print("Modelo guardado como svm_model.pkl")
 
-# ... (resto del código sin cambios)
+# Guardar resultados
+results = pd.DataFrame({
+    'Model': ['SVM'],
+    'Accuracy': [accuracy],
+    'Precision': [precision],
+    'Recall': [recall],
+    'F1 Score': [f1],
+    'ROC AUC': [roc_auc],
+    'Best Parameters': [grid_search_svm.best_params_],
+})
+
+# Actualizar el archivo CSV de métricas
+try:
+    existing_metrics = pd.read_csv('model_metrics.csv')
+    updated_metrics = pd.concat([existing_metrics, results], ignore_index=True)
+except FileNotFoundError:
+    updated_metrics = results
+
+updated_metrics.to_csv('model_metrics.csv', index=False)
+print("Métricas guardadas en 'model_metrics.csv'")
 
 # Dibujar y guardar la curva ROC
 plt.figure()
-plt.plot(fpr, tpr, color='blue', lw=2, label=f'SVM (AUC = {roc_auc:.2f})')
+plt.plot(fpr, tpr, color='green', lw=2, label=f'SVM (AUC = {roc_auc:.2f})')
 plt.plot([0, 1], [0, 1], color='red', lw=2, linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
