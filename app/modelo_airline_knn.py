@@ -82,7 +82,7 @@ try:
 except FileNotFoundError:
     updated_metrics = results
 
-updated_metrics.to_csv('model_metrics.csv', index=False)
+updated_metrics.to_csv('metrics/model_metrics.csv', index=False)
 print("Métricas guardadas en 'model_metrics.csv'")
 # Guardar la curva ROC
 plt.figure()

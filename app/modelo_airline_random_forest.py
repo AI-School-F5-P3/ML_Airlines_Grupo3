@@ -114,12 +114,12 @@ metricsdf = pd.DataFrame({
 metricsdf.to_csv('rf_classification_results.csv', index=False)
 #Carga de df
 try:
-    existing_metrics = pd.read_csv('model_metrics.csv')
+    existing_metrics = pd.read_csv('metrics/model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
 except FileNotFoundError:
     updated_metrics = metricsdf
 
-updated_metrics.to_csv('model_metrics.csv', index=False)
+updated_metrics.to_csv('metrics/model_metrics.csv', index=False)
 print("Métricas guardadas en 'model_metrics.csv'")
 plt.figure()
 plt.plot(fpr_rf, tpr_rf, color='blue', lw=2, label=f'Random Forest (AUC = {roc_auc:.2f})')
