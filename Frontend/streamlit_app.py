@@ -2,10 +2,10 @@ import streamlit as st
 import requests
 
 # Diccionarios de mapeo para campos categóricos
-customer_type_map = {'Loyal Customer': 'loyal', 'Disloyal Customer': 'disloyal'}
-travel_type_map = {'Personal Travel': 'personal', 'Business Travel': 'business'}
-class_map = {'Eco': 'eco', 'Eco Plus': 'eco_plus', 'Business': 'business'}
-satisfaction_map = {'Neutral or Dissatisfied': 'neutral', 'Satisfied': 'satisfied'}
+customer_type_map = {'Loyal Customer': 'Loyal Customer', 'Disloyal Customer': 'Disloyal Customer'}
+travel_type_map = {'Personal Travel': 'Personal Travel', 'Business Travel': 'Business Travel'}
+class_map = {'Eco': 'Eco', 'Eco Plus': 'Eco Plus', 'Business': 'Business'}
+satisfaction_map = {'Neutral or Dissatisfied': 'Neutral or Dissatisfied', 'Satisfied': 'Satisfied'}
 
 # Título con emojis
 st.title("📋 Formulario de Satisfacción del Pasajero 🛫😊")
@@ -88,13 +88,13 @@ st.write("🎉 ¡Gracias por viajar con nosotros! ✈️💼 Esperamos que vuele
 
 # --- Botón de enviar datos ---
 if st.button("Guardar Datos"):
-    st.write(input_data)  # Muestra los datos ingresados en la interfaz para verificación
+    #st.write(input_data)  # Muestra los datos ingresados en la interfaz para verificación
     result = send_data_to_api(input_data)
     message = "Datos Guardados"
     if result:
-        if 'error' in result:
-            st.error(result['error'])
-        else:
-            st.success(result['message'])
+        st.success(message)
+        
+    else:
+        st.error("error") 
 
 
