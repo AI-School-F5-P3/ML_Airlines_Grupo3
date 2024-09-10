@@ -1,14 +1,31 @@
 import streamlit as st
 import requests
 
+
 # Diccionarios de mapeo para campos categóricos
 customer_type_map = {'Loyal Customer': 'Loyal Customer', 'Disloyal Customer': 'Disloyal Customer'}
 travel_type_map = {'Personal Travel': 'Personal Travel', 'Business Travel': 'Business Travel'}
 class_map = {'Eco': 'Eco', 'Eco Plus': 'Eco Plus', 'Business': 'Business'}
 satisfaction_map = {'Neutral or Dissatisfied': 'Neutral or Dissatisfied', 'Satisfied': 'Satisfied'}
 
+
+page_bg_img = '''
+<style>
+.stApp {
+background-image: url("https://www.aviationgroup.es/wp-content/uploads/2019/04/1132-e1591699339327.jpg);
+background-size: cover;
+}
+</style>
+'''
+
+# Cargar el CSS
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
+
 # Título con emojis
 st.title("📋 Formulario de Satisfacción del Pasajero 🛫😊")
+
+
 
 # Resto del código para tu formulario
 st.write("¡Por favor, llena los siguientes campos para ayudarnos a mejorar! 🙏")
