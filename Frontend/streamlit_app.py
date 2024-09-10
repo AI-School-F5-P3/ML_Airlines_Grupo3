@@ -99,7 +99,11 @@ def send_data_to_api(data):
         if e.response is not None:
             st.error(e.response.text)  # Mostrar respuesta completa del error
         return None
-
+    if response.status_code == 200:
+        prediction = response.json()["prediction"]
+        st.success(f"La predicción de satisfacción del cliente es: {'Satisfecho' if prediction == 1 else 'No satisfecho'}")
+    else:
+        st.error("Hubo un error al obtener la predicción. Por favor, intenta de nuevo.")
 st.write("🎉 ¡Gracias por viajar con nosotros! ✈️💼 Esperamos que vueles pronto. 😊")
 
 
@@ -113,5 +117,21 @@ if st.button("Guardar Datos"):
         
     else:
         st.error("error") 
+
+
+
+
+
+    submit_button = st.form_submit_button("Enviar")
+
+
+    # Enviar datos a la API y obtener predicción
+    response = requests.post(f"{API_URL}/predict/", json=data)
+    
+    if response.status_code == 200:
+        prediction = response.json()["prediction"]
+        st.success(f"La predicción de satisfacción del cliente es: {'Satisfecho' if prediction == 1 else 'No satisfecho'}")
+    else:
+        st.error("Hubo un error al obtener la predicción. Por favor, intenta de nuevo.")
 
 
