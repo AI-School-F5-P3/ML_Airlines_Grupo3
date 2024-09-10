@@ -77,7 +77,7 @@ results = pd.DataFrame({
 results.to_csv('knn_classification_results.csv', index=False)
 # Actualizar el archivo CSV de métricas
 try:
-    existing_metrics = pd.read_csv('model_metrics.csv')
+    existing_metrics = pd.read_csv('metrics/model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, results], ignore_index=True)
 except FileNotFoundError:
     updated_metrics = results
