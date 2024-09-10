@@ -2,9 +2,10 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models_db, schemas_db
 from database import engine, get_db
-import joblib  # O pickle si has guardado el modelo con pickle
+import joblib  
 import os
 from dotenv import load_dotenv
+import crud
 
 
 
@@ -20,8 +21,6 @@ app = FastAPI()
 # Cargar el modelo de Machine Learning
 MODEL_PATH = os.getenv("MODEL_PATH", "default_model_path/model.joblib")
 print(f"Trying to load model from: {MODEL_PATH}")
-
-
 
 
 @app.post("/submit/", response_model=schemas_db.Questions_passenger_satisfaction)

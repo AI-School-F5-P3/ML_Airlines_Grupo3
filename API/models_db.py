@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from database import Base
 
-class QuestionsPassengerSatisfaction(Base):
+class Questions_passenger_satisfaction(Base):
     __tablename__ = "passenger_satisfaction"
 
     id = Column(Integer, primary_key=True, index=True)

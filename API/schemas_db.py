@@ -14,7 +14,7 @@ class TripClass(str, Enum):
     ECO_PLUS = "Eco Plus"
     BUSINESS = "Business"
 
-class PassengerSatisfaction(str, Enum):
+class Satisfaction(str, Enum):
     NEUTRAL = "Neutral or Dissatisfied"
     SATISFIED = "Satisfied"
 
@@ -41,7 +41,7 @@ class Questions_passenger_satisfaction_Base(BaseModel):
     cleanliness: int = Field(..., ge=0, le=5)
     departure_delay_in_minutes: int = Field(..., ge=0)
     arrival_delay_in_minutes: int = Field(..., ge=0)
-    satisfaction: PassengerSatisfaction
+    satisfaction: Satisfaction
 
 class Questions_passenger_satisfactionCreate(Questions_passenger_satisfaction_Base):
     pass
@@ -69,7 +69,7 @@ class Questions_passenger_satisfactionUpdate(BaseModel):
     cleanliness: int | None = Field(None, ge=0, le=5)
     departure_delay_in_minutes: int | None = Field(None, ge=0)
     arrival_delay_in_minutes: int | None = Field(None, ge=0)
-    satisfaction: PassengerSatisfaction | None = None
+    satisfaction: Satisfaction | None = None
 
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int
