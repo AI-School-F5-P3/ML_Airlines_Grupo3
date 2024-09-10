@@ -33,6 +33,9 @@ __pycache__/
 # Archivos de logs y bases de datos
 *.log
 *.sqlite3
+*.sqlalquemy
+*.dotenv
+*.uvicorn
 
 # Archivos de salida de prueba/unittest
 htmlcov/
