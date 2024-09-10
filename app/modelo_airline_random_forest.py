@@ -2,18 +2,16 @@ import pandas as pd
 from sklearn.calibration import cross_val_predict
 from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score, roc_curve, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, roc_auc_score, accuracy_score, roc_curve, precision_score, recall_score, f1_score
 import matplotlib.pyplot as plt
 import joblib
-import seaborn as sns
 from sklearn.utils import shuffle
 import time
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 # Cargar el archivo CSV con el df limpio y escalado
 file_path = 'data/airline_passenger_satisfaction_model.csv'
 df = pd.read_csv(file_path)
-
-
 
 # Usar una muestra de 10.000 filas para la búsqueda de hiperparámetros
 sample_size = 10000
@@ -105,16 +103,22 @@ print("Random Forest Standard Deviation:", cv_scores_rf.std())
 fpr_rf, tpr_rf, _ = roc_curve(y_test, best_rf_model.predict_proba(X_test)[:, 1])
 
 
-
-
 # Verificación adicional sobre la precisión del modelo
 accuracy = accuracy_score(y_test, y_pred_rf)
 print(f"La exactitud del modelo Random Forest es de {accuracy * 100:.2f}%")
 
+
+#Se definen variables a los efectos de exportar el modelo
+scaler = StandardScaler()
+encoder = OneHotEncoder()
+
 # Guardar el modelo en un archivo
 joblib.dump(best_rf_model, 'models/rf_model.pkl')
 print("Modelo guardado como rf_model.pkl")
-
+joblib.dump(encoder, 'models/encoder.pkl')
+print("Encoder guardado como encoder.pkl")
+joblib.dump(scaler, 'models/scaler.pkl')
+print("Scaler guardado como scaler.pkl")
 
 
 metricsdf = pd.DataFrame({
