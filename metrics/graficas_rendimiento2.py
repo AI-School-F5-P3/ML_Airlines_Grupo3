@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Cargar los datos
-df = pd.read_csv('metrics/model_metrics.csv')
+df = pd.read_csv('metrics/model_metrics_ok.csv')
 
 # Crear el gráfico de barras para AUC
 plt.figure(figsize=(10, 6))

@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Cargar los datos del archivo CSV
-df = pd.read_csv('metrics/model_metrics.csv')
+df = pd.read_csv('metrics/model_metrics_ok.csv')
 
 # Definir las métricas a graficar
 metrics = ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC']
