@@ -107,4 +107,15 @@ plt.savefig('metrics/em_metrics.png')
 plt.close()
 print("Gráfico de métricas guardado como 'em_metrics.png'")
 
-
+# Guardar la curva ROC
+plt.figure()
+plt.plot(fpr, tpr, color='blue', lw=2, label=f'EM (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='red', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('Tasa de Falsos Positivos')
+plt.ylabel('Tasa de Verdaderos Positivos')
+plt.title('Curva ROC EM')
+plt.legend(loc="lower right")
+plt.savefig('roc_curve_em.png')
+plt.close()
