@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Obtener la URL de la base de datos desde las variables de entorno
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./satisfaction.db")
 
 # Crear el motor de la base de datos
 # Nota: `check_same_thread` es específico de SQLite y se debe usar solo si es necesario

@@ -5,7 +5,7 @@ class QuestionsPassengerSatisfaction(Base):
     __tablename__ = "passenger_satisfaction"
 
     id = Column(Integer, primary_key=True, index=True)
-    gender = Column(Integer)  # 0 for Female, 1 for Male
+    gender = Column(Integer)  # 0 para Female, 1 para Male
     customer_type = Column(String)
     age = Column(Integer)
     travel_type = Column(String)
@@ -27,4 +27,4 @@ class QuestionsPassengerSatisfaction(Base):
     cleanliness = Column(Integer)
     departure_delay_in_minutes = Column(Integer)
     arrival_delay_in_minutes = Column(Integer)
-    satisfaction = Column(String)  # Cambiado a 'satisfaction'
+    satisfaction = Column(String)

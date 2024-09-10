@@ -2,24 +2,24 @@ from pydantic import BaseModel, Field
 from enum import Enum
 
 class CustomerType(str, Enum):
-    loyal = "Loyal Customer"
-    disloyal = "Disloyal Customer"
+    LOYAL = "Loyal Customer"
+    DISLOYAL = "Disloyal Customer"
 
 class TravelType(str, Enum):
-    personal = "Personal Travel"
-    business = "Business Travel"
+    PERSONAL = "Personal Travel"
+    BUSINESS = "Business Travel"
 
 class TripClass(str, Enum):
-    eco = "Eco"
-    eco_plus = "Eco Plus"
-    business = "Business"
+    ECO = "Eco"
+    ECO_PLUS = "Eco Plus"
+    BUSINESS = "Business"
 
 class PassengerSatisfaction(str, Enum):
-    neutral = "Neutral or Dissatisfied"
-    satisfied = "Satisfied"
+    NEUTRAL = "Neutral or Dissatisfied"
+    SATISFIED = "Satisfied"
 
 class Questions_passenger_satisfaction_Base(BaseModel):
-    gender: int = Field(..., ge=0, le=1, description="0 for Female, 1 for Male")
+    gender: int = Field(..., ge=0, le=1, description="0 for Female, 1 for Male")  # Integer
     customer_type: CustomerType
     age: int = Field(..., ge=0, le=120)
     travel_type: TravelType
@@ -41,13 +41,13 @@ class Questions_passenger_satisfaction_Base(BaseModel):
     cleanliness: int = Field(..., ge=0, le=5)
     departure_delay_in_minutes: int = Field(..., ge=0)
     arrival_delay_in_minutes: int = Field(..., ge=0)
-    satisfaction: PassengerSatisfaction  # Cambiado a 'satisfaction'
+    satisfaction: PassengerSatisfaction
 
 class Questions_passenger_satisfactionCreate(Questions_passenger_satisfaction_Base):
     pass
 
 class Questions_passenger_satisfactionUpdate(BaseModel):
-    gender: int | None = Field(None, ge=0, le=1, description="0 for Female, 1 for Male")
+    gender: int | None = Field(None, ge=0, le=1)
     customer_type: CustomerType | None = None
     age: int | None = Field(None, ge=0, le=120)
     travel_type: TravelType | None = None
@@ -69,7 +69,7 @@ class Questions_passenger_satisfactionUpdate(BaseModel):
     cleanliness: int | None = Field(None, ge=0, le=5)
     departure_delay_in_minutes: int | None = Field(None, ge=0)
     arrival_delay_in_minutes: int | None = Field(None, ge=0)
-    satisfaction: PassengerSatisfaction | None = None  # Cambiado a 'satisfaction'
+    satisfaction: PassengerSatisfaction | None = None
 
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int
