@@ -1,11 +1,14 @@
 import streamlit as st
 import requests
 
-# Diccionarios de mapeo para campos categóricos
+
+# Diccionarios de mapeo para campos categóricos (¡ para coincidir con FastAPI)
 gender_map = {'Female': 'female', 'Male': 'male'}
-customer_type_map = {'Loyal': 'loyal', 'Disloyal': 'disloyal'}
-travel_type_map = {'Personal Travel': 'personal travel', 'Business Travel': 'business travel'}
-class_map = {'Eco': 'eco', 'Eco Plus': 'eco plus', 'Business': 'business'}
+customer_type_map = {'Loyal': 'Loyal Customer', 'Disloyal': 'Disloyal Customer'}
+travel_type_map = {'Personal Travel': 'Personal Travel', 'Business Travel': 'Business Travel'}
+class_map = {'Eco': 'Eco', 'Eco Plus': 'Eco Plus', 'Business': 'Business'}
+satisfaction_map = {'Neutral o Insatisfecho': 'Neutral or Dissatisfied', 'Satisfecho': 'Satisfied'}
+
 
 # Diccionario de satisfacción para los campos con valores 1 a 5
 satisfaction_scale = {
@@ -15,7 +18,6 @@ satisfaction_scale = {
     'Bueno': 4,
     'Excelente': 5
 }
-
 
 # Crear la interfaz de Streamlit
 st.title("Formulario de Satisfacción del Pasajero")
@@ -95,9 +97,9 @@ input_data['departure_delay_in_minutes'] = departure_delay
 arrival_delay = st.slider("Retraso en la Llegada (en minutos):", 0, 1000, 0, key="arrival_delay")
 input_data['arrival_delay_in_minutes'] = arrival_delay
 
-# Entrada para la satisfaccion
-satisfaction_client = st.slider("Porfavor diganos si esta:" ("satisfecho, insatisfecho/neutral"))
-input_data['satisfaction'] = satisfaction
+# Entrada para la satisfacción general
+satisfaction_client = st.selectbox("Por favor indíquenos su nivel de satisfacción general:", ['Neutral o Insatisfecho', 'Satisfecho'], key="satisfaction_client")
+input_data['satisfaction'] = satisfaction_client
 
 # Función para enviar datos a la API FastAPI
 def send_data_to_api(data):
@@ -111,7 +113,6 @@ def send_data_to_api(data):
         return None
 
 # Botón de guardar datos
-
 if st.button("Guardar Datos"):
     print(input_data)
     result = send_data_to_api(input_data)
@@ -120,3 +121,5 @@ if st.button("Guardar Datos"):
             st.error(result['error'])
         else:
             st.success(result['message'])
+
+
