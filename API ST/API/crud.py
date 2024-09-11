@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 def create_passenger_satisfaction(db: Session, passenger: schemas_db.Questions_passenger_satisfactionCreate, predicted_satisfaction: str | None = None):
     try:
-        db_passenger = models_db.Questions_passenger_satisfaction(**passenger.dict(), predicted_satisfaction=predicted_satisfaction)
+        db_passenger = models_db.Questions_passenger_satisfaction(**passenger.dict())
         db.add(db_passenger)
         db.commit()
         db.refresh(db_passenger)

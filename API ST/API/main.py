@@ -3,14 +3,14 @@ from sqlalchemy.orm import Session
 from typing import List
 import models_db, schemas_db
 from database import engine, get_db
+import crud
 import joblib
 import os
 from dotenv import load_dotenv
-import crud
 import logging
 
 # Configuración de logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Cargar variables de entorno
@@ -71,7 +71,7 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
     Raises:
         HTTPException: Si ocurre un error durante la operación.
     """
-    logger.debug(f"Received passenger data: {passenger}")
+    logger.info(f"Received passenger data: {passenger}")
 
     passenger_data = [
         [
@@ -99,14 +99,14 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
         ]
     ]
     
-    logger.debug(f"Prepared passenger data: {passenger_data}")
+    logger.info(f"Prepared passenger data: {passenger_data}")
 
     predicted_satisfaction = predict_satisfaction(passenger_data)
-    logger.debug(f"Prediction: {predicted_satisfaction}")
+    logger.info(f"Prediction: {predicted_satisfaction}")
 
     try:
         db_passenger = crud.create_passenger_satisfaction(db=db, passenger=passenger, predicted_satisfaction=predicted_satisfaction)
-        logger.debug("Passenger data saved to database")
+        logger.info("Passenger data saved to database")
         
         return schemas_db.Questions_passenger_satisfaction(
             id=db_passenger.id,
@@ -119,8 +119,8 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
 
 @app.get("/passengers/", response_model=List[schemas_db.Questions_passenger_satisfaction])
 def read_passengers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    """Obtiene una lista de pasajeros con paginación."""
-    return crud.get_all_passenger_satisfaction(db, skip=skip, limit=limit)
+    passengers = crud.get_all_passenger_satisfaction(db, skip=skip, limit=limit)
+    return passengers
 
 @app.get("/passengers/{passenger_id}", response_model=schemas_db.Questions_passenger_satisfaction)
 def read_passenger(passenger_id: int, db: Session = Depends(get_db)):
