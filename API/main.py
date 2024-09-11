@@ -2,12 +2,10 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models_db, schemas_db
 from database import engine, get_db
-import joblib  
+import joblib
 import os
 from dotenv import load_dotenv
 import crud
-
-
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
@@ -22,6 +20,12 @@ app = FastAPI()
 MODEL_PATH = os.getenv("MODEL_PATH", "default_model_path/model.joblib")
 print(f"Trying to load model from: {MODEL_PATH}")
 
+try:
+    model = joblib.load(MODEL_PATH)
+    print("Model loaded successfully")
+except Exception as e:
+    print(f"Error loading model: {str(e)}")
+    model = None
 
 @app.post("/submit/", response_model=schemas_db.Questions_passenger_satisfaction)
 def submit_form(passenger: schemas_db.Questions_passenger_satisfactionCreate, db: Session = Depends(get_db)):
@@ -44,6 +48,9 @@ def predict_satisfaction(passenger: schemas_db.Questions_passenger_satisfactionC
     """
     Endpoint para predecir la satisfacción del pasajero.
     """
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded")
+
     # Preparar los datos para el modelo
     passenger_data = [
         [
@@ -75,7 +82,7 @@ def predict_satisfaction(passenger: schemas_db.Questions_passenger_satisfactionC
     # Hacer la predicción
     try:
         prediction = model.predict(passenger_data)
-        return {"prediction": prediction[0]}
+        return {"prediction": int(prediction[0])}  # Convertir a int para asegurar serialización JSON
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error making prediction: {str(e)}")
 

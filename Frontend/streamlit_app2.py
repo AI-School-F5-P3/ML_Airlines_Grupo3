@@ -1,13 +1,30 @@
 import streamlit as st
 import requests
+from enum import Enum
 
+# URL de tu API FastAPI
+API_URL = "http://localhost:8000"
 
-# Diccionarios de mapeo para campos categóricos
-customer_type_map = {'Loyal Customer': 'Loyal Customer', 'Disloyal Customer': 'Disloyal Customer'}
-travel_type_map = {'Personal Travel': 'Personal Travel', 'Business Travel': 'Business Travel'}
-class_map = {'Eco': 'Eco', 'Eco Plus': 'Eco Plus', 'Business': 'Business'}
-satisfaction_map = {'Neutral or Dissatisfied': 'Neutral or Dissatisfied', 'Satisfied': 'Satisfied'}
+# Definiciones de Enum para coincidir con el esquema
+class CustomerType(str, Enum):
+    LOYAL = "Loyal Customer"
+    DISLOYAL = "Disloyal Customer"
 
+class TravelType(str, Enum):
+    PERSONAL = "Personal Travel"
+    BUSINESS = "Business Travel"
+
+class TripClass(str, Enum):
+    ECO = "Eco"
+    ECO_PLUS = "Eco Plus"
+    BUSINESS = "Business"
+
+class Satisfaction(str, Enum):
+    NEUTRAL = "Neutral or Dissatisfied"
+    SATISFIED = "Satisfied"
+
+# Configuración de la página
+st.set_page_config(page_title="Satisfacción del Pasajero", page_icon="✈️")
 
 page_bg_img = '''
 <style>
@@ -21,36 +38,32 @@ background-size: cover;
 # Cargar el CSS
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-
 # Título con emojis
 st.title("📋 Formulario de Satisfacción del Pasajero 🛫😊")
 
-
-
-# Resto del código para tu formulario
 st.write("¡Por favor, llena los siguientes campos para ayudarnos a mejorar! 🙏")
 
 # --- Entrada de datos desde la interfaz ---
 
-# Selección para el género (0 para Female, 1 para Male)
+# Selección para el género
 gender = st.selectbox("Seleccione Género:", ['Female', 'Male'])
 input_data = {'gender': 0 if gender == 'Female' else 1}
 
 # Selección para el tipo de cliente
-customer_type = st.selectbox("Seleccione Tipo de Cliente:", ['Loyal Customer', 'Disloyal Customer'])
-input_data['customer_type'] = customer_type_map[customer_type]
+customer_type = st.selectbox("Seleccione Tipo de Cliente:", [CustomerType.LOYAL.value, CustomerType.DISLOYAL.value])
+input_data['customer_type'] = customer_type
 
 # Entrada para la edad (0 a 120)
 age = st.slider("Seleccione Edad:", 0, 120, 25)
 input_data['age'] = age
 
 # Selección para el tipo de viaje
-travel_type = st.selectbox("Seleccione Tipo de Viaje:", ['Personal Travel', 'Business Travel'])
-input_data['travel_type'] = travel_type_map[travel_type]
+travel_type = st.selectbox("Seleccione Tipo de Viaje:", [TravelType.PERSONAL.value, TravelType.BUSINESS.value])
+input_data['travel_type'] = travel_type
 
 # Selección para la clase
-trip_class = st.selectbox("Seleccione Clase:", ['Eco', 'Eco Plus', 'Business'])
-input_data['trip_class'] = class_map[trip_class]
+trip_class = st.selectbox("Seleccione Clase:", [TripClass.ECO.value, TripClass.ECO_PLUS.value, TripClass.BUSINESS.value])
+input_data['trip_class'] = trip_class
 
 # Entrada para la distancia de vuelo (0 a 10000)
 flight_distance = st.slider("Distancia de Vuelo (km):", 0, 10000, 500)
@@ -84,54 +97,36 @@ arrival_delay = st.slider("Retraso en la Llegada (en minutos):", 0, 1000, 0)
 input_data['arrival_delay_in_minutes'] = arrival_delay
 
 # Entrada para la satisfacción del cliente
-satisfaction_client = st.selectbox("¿Está satisfecho con el servicio?", ['Neutral or Dissatisfied', 'Satisfied'])
-input_data['satisfaction'] = satisfaction_map[satisfaction_client]
+satisfaction_client = st.selectbox("¿Está satisfecho con el servicio?", [Satisfaction.NEUTRAL.value, Satisfaction.SATISFIED.value])
+input_data['satisfaction'] = satisfaction_client
 
-# --- Función para enviar datos a la API ---
+# --- Función para enviar datos a la API y obtener predicción ---
 def send_data_to_api(data):
     try:
-        response = requests.post("http://localhost:8000/submit/", json=data)
-        response.raise_for_status()
-        result = response.json()
-        return result
+        # Enviar datos para guardar y para predecir (ahora son los mismos)
+        response_submit = requests.post(f"{API_URL}/submit/", json=data)
+        response_submit.raise_for_status()
+        
+        response_predict = requests.post(f"{API_URL}/predict/", json=data)
+        response_predict.raise_for_status()
+        
+        result_submit = response_submit.json()
+        result_predict = response_predict.json()
+        return result_submit, result_predict
     except requests.RequestException as e:
         st.error(f"Error al conectar con la API: {str(e)}")
         if e.response is not None:
             st.error(e.response.text)  # Mostrar respuesta completa del error
-        return None
-    if response.status_code == 200:
-        prediction = response.json()["prediction"]
-        st.success(f"La predicción de satisfacción del cliente es: {'Satisfecho' if prediction == 1 else 'No satisfecho'}")
-    else:
-        st.error("Hubo un error al obtener la predicción. Por favor, intenta de nuevo.")
-st.write("🎉 ¡Gracias por viajar con nosotros! ✈️💼 Esperamos que vueles pronto. 😊")
-
+        return None, None
 
 # --- Botón de enviar datos ---
-if st.button("Guardar Datos"):
-    #st.write(input_data)  # Muestra los datos ingresados en la interfaz para verificación
-    result = send_data_to_api(input_data)
-    message = "Datos Guardados"
-    if result:
-        st.success(message)
-        
-    else:
-        st.error("error") 
-
-
-
-
-
-    submit_button = st.form_submit_button("Enviar")
-
-
-    # Enviar datos a la API y obtener predicción
-    response = requests.post(f"{API_URL}/predict/", json=data)
-    
-    if response.status_code == 200:
-        prediction = response.json()["prediction"]
+if st.button("Guardar Datos y Predecir"):
+    result_submit, result_predict = send_data_to_api(input_data)
+    if result_submit and result_predict:
+        st.success("Datos Guardados Exitosamente")
+        prediction = result_predict["prediction"]
         st.success(f"La predicción de satisfacción del cliente es: {'Satisfecho' if prediction == 1 else 'No satisfecho'}")
     else:
-        st.error("Hubo un error al obtener la predicción. Por favor, intenta de nuevo.")
+        st.error("Hubo un error al procesar los datos. Por favor, intenta de nuevo.")
 
-
+st.write("🎉 ¡Gracias por viajar con nosotros! ✈️💼 Esperamos que vueles pronto. 😊")
