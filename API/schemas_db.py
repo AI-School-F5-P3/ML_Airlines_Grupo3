@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -68,8 +69,8 @@ class Questions_passenger_satisfactionUpdate(BaseModel):
     inflight_service: int | None = Field(None, ge=0, le=5)
     cleanliness: int | None = Field(None, ge=0, le=5)
     departure_delay_in_minutes: int | None = Field(None, ge=0)
-    # arrival_delay_in_minutes: int | None = Field(None, ge=0)
     satisfaction: Satisfaction | None = None
+    
 
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int

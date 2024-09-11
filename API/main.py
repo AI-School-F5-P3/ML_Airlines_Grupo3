@@ -63,27 +63,33 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
         ]
         logger.debug(f"Prepared passenger data: {passenger_data}")
 
+        # Realizar la predicción
         prediction = model.predict(passenger_data)
         predicted_satisfaction = "Satisfied" if prediction[0] == 1 else "Neutral or Dissatisfied"
         logger.debug(f"Prediction: {predicted_satisfaction}")
         
         # Crear el objeto de pasajero con la predicción
         passenger_dict = passenger.model_dump()
-        passenger_dict['predicted_satisfaction'] = predicted_satisfaction
-        
-        # Guardar en la base de datos
+
+        # Crear pasajero en la base de datos sin la predicción
         db_passenger = crud.create_passenger_satisfaction(db=db, passenger=schemas_db.Questions_passenger_satisfactionCreate(**passenger_dict))
         logger.debug("Passenger data saved to database")
+
+        # Actualizar la satisfacción predicha
+        db_passenger = crud.update_passenger_satisfaction(db=db, passenger_id=db_passenger.id, predicted_satisfaction=predicted_satisfaction)
+        logger.debug("Predicted satisfaction updated in database")
         
-        # Ensure that the returned object matches the response model
+        # Devolver la respuesta con los datos actualizados
         return schemas_db.Questions_passenger_satisfaction(
             id=db_passenger.id,
             predicted_satisfaction=schemas_db.Satisfaction(predicted_satisfaction),
-            **passenger.model_dump()
+            **passenger_dict
         )
+
     except Exception as e:
         logger.exception("Error occurred during prediction or database operation")
         raise HTTPException(status_code=500, detail=f"Error making prediction: {str(e)}")
+
 
 if __name__ == "__main__":
     import uvicorn

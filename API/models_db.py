@@ -28,3 +28,4 @@ class Questions_passenger_satisfaction(Base):
     departure_delay_in_minutes = Column(Integer)
     satisfaction = Column(String)
     predicted_satisfaction = Column(String)
+
