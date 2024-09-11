@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import VotingClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 import joblib
 import seaborn as sns
 from sklearn.utils import shuffle
@@ -47,17 +47,21 @@ ensemble_model.fit(X_train, y_train)
 
 # Hacer predicciones
 y_pred = ensemble_model.predict(X_test)
+y_pred_proba = ensemble_model.predict_proba(X_test)[:, 1]  # Usar solo la probabilidad de la clase positiva
 
 # Evaluar el rendimiento del ensemble
-accuracy = accuracy_score(y_test, y_pred)
 conf_matrix = confusion_matrix(y_test, y_pred)
-class_report = classification_report(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, ensemble_model.predict_proba(X_test)[:, 1])
+fpr, tpr, _ = roc_curve(y_test, y_pred_proba)  # Aquí ahora se usa solo la probabilidad de la clase positiva
+roc_auc = roc_auc_score(y_test, y_pred_proba)  # También para el AUC se usa solo la probabilidad de la clase positiva
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, pos_label=1)
+recall = recall_score(y_test, y_pred, pos_label=1)
+f1 = f1_score(y_test, y_pred, pos_label=1)
 
 
 print(f"Accuracy del modelo ensemble: {accuracy}")
 print(f"Matriz de confusión:\n{conf_matrix}")
-print(f"Reporte de clasificación:\n{class_report}")
+print(f"Reporte de clasificación:\n{classification_report(y_test, y_pred)}")
 print("Random Forest AUC:", roc_auc)
 
 
@@ -75,10 +79,13 @@ metricsdf = pd.DataFrame({
     'Accuracy': [accuracy],
     'Precision': [precision],
     'Recall': [recall],
-    'F1_Score': [f1],
-    'AUC_ROC': [roc_auc],
-    'Best_Parameters': [str("Hiperparámetros No Aplicados en este modelo")]
+    'F1 Score': [f1],
+    'ROC AUC': [roc_auc],
+    'Best Parameters': [str("Hiperparámetros No Aplicados en este modelo")]
 })
+
+
+
 
 # Cargar métricas existentes (si las hay) y guardar en un archivo CSV
 try:
@@ -100,4 +107,15 @@ plt.savefig('metrics/em_metrics.png')
 plt.close()
 print("Gráfico de métricas guardado como 'em_metrics.png'")
 
-
+# Guardar la curva ROC
+plt.figure()
+plt.plot(fpr, tpr, color='blue', lw=2, label=f'EM (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='red', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('Tasa de Falsos Positivos')
+plt.ylabel('Tasa de Verdaderos Positivos')
+plt.title('Curva ROC EM')
+plt.legend(loc="lower right")
+plt.savefig('roc_curve_em.png')
+plt.close()

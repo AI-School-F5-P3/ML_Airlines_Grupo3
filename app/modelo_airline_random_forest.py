@@ -2,18 +2,16 @@ import pandas as pd
 from sklearn.calibration import cross_val_predict
 from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score, roc_curve, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, roc_auc_score, accuracy_score, roc_curve, precision_score, recall_score, f1_score
 import matplotlib.pyplot as plt
 import joblib
-import seaborn as sns
 from sklearn.utils import shuffle
 import time
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 # Cargar el archivo CSV con el df limpio y escalado
 file_path = 'data/airline_passenger_satisfaction_model.csv'
 df = pd.read_csv(file_path)
-
-
 
 # Usar una muestra de 10.000 filas para la búsqueda de hiperparámetros
 sample_size = 10000
@@ -55,6 +53,8 @@ grid_search_rf = GridSearchCV(estimator=rf_model, param_grid=param_grid_rf, cv=k
 grid_search_rf.fit(X_sample, y_sample)
 end_time = time.time()
 
+
+
 print(f"Búsqueda de hiperparámetros completada en {end_time - start_time:.2f} segundos")
 # Evaluar el modelo ajustado en el conjunto de test
 best_rf_model = grid_search_rf.best_estimator_
@@ -81,6 +81,19 @@ f1 = f1_score(y_test, y_pred, pos_label=1)
 # Evaluar el modelo utilizando validación cruzada
 cv_scores_rf = cross_val_score(rf_model, X_full, y_full, cv=kf, scoring='accuracy')
 
+# Evaluar el modelo en el conjunto de entrenamiento
+y_pred_train = best_rf_model.predict(X_train)
+
+# Métricas para el conjunto de entrenamiento
+accuracy_train = accuracy_score(y_train, y_pred_train)
+precision_train = precision_score(y_train, y_pred_train, pos_label=1)
+recall_train = recall_score(y_train, y_pred_train, pos_label=1)
+f1_train = f1_score(y_train, y_pred_train, pos_label=1)
+
+# Imprimir métricas para entrenamiento y prueba
+print(f"Entrenamiento: Accuracy: {accuracy_train:.2f}, Precision: {precision_train:.2f}, Recall: {recall_train:.2f}, F1 Score: {f1_train:.2f}")
+print(f"Prueba: Accuracy: {accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1 Score: {f1:.2f}")
+
 # Imprimir los resultados
 print("Random Forest Cross-Validation Accuracy Scores:", cv_scores_rf)
 print("Random Forest Mean Accuracy:", cv_scores_rf.mean())
@@ -90,16 +103,22 @@ print("Random Forest Standard Deviation:", cv_scores_rf.std())
 fpr_rf, tpr_rf, _ = roc_curve(y_test, best_rf_model.predict_proba(X_test)[:, 1])
 
 
-
-
 # Verificación adicional sobre la precisión del modelo
 accuracy = accuracy_score(y_test, y_pred_rf)
 print(f"La exactitud del modelo Random Forest es de {accuracy * 100:.2f}%")
 
+
+#Se definen variables a los efectos de exportar el modelo
+scaler = StandardScaler()
+encoder = OneHotEncoder()
+
 # Guardar el modelo en un archivo
 joblib.dump(best_rf_model, 'models/rf_model.pkl')
 print("Modelo guardado como rf_model.pkl")
-
+joblib.dump(encoder, 'models/encoder.pkl')
+print("Encoder guardado como encoder.pkl")
+joblib.dump(scaler, 'models/scaler.pkl')
+print("Scaler guardado como scaler.pkl")
 
 
 metricsdf = pd.DataFrame({

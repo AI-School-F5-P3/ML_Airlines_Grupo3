@@ -66,13 +66,11 @@ recall = recall_score(y_test, y_pred, pos_label=1)
 f1 = f1_score(y_test, y_pred, pos_label=1)
 
 # Mostrar resultados
-print(f'Mejores parámetros encontrados para SVM: {grid_search_svm.best_params_}')
 print(f'Precisión: {accuracy:.4f}')
 print(f'Precisión (Precision): {precision:.4f}')
 print(f'Recall: {recall:.4f}')
 print(f'Puntuación F1: {f1:.4f}')
 print(f'ROC AUC: {roc_auc:.4f}')
-print(f'Matriz de confusión:\n{conf_matrix}')
 
 # Guardar el modelo en un archivo
 joblib.dump(best_svm_model, 'models/svm_model.pkl')

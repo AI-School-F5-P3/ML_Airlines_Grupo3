@@ -1,2 +1,0 @@
-Model,Accuracy,Precision,Recall,F1 Score,ROC AUC,Best Parameters
-KNN,0.9302180085663411,0.9494818652849741,0.887604579480405,0.917501137915339,0.9763859104959102,"{'metric': 'manhattan', 'n_neighbors': 9, 'weights': 'distance'}"
