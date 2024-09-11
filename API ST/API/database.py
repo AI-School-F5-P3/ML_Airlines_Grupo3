@@ -1,31 +1,38 @@
-from sqlalchemy import create_engine
-import sqlalchemy
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+import logging
 
-# Cargar variables de entorno desde un archivo .env
-# load_dotenv()
+# Cargar variables de entorno
+load_dotenv()
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Obtener la URL de la base de datos desde las variables de entorno
-DATABASE_URL = ("sqlite:///./satisfaction.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./satisfaction.db")
 
-# Si DATABASE_URL no está definido, usar un valor por defecto
+# Función para crear el motor de la base de datos
+def create_db_engine():
+    try:
+        connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+        engine = create_engine(DATABASE_URL, connect_args=connect_args)
+        logger.info(f"Database engine created successfully with URL: {DATABASE_URL}")
+        return engine
+    except Exception as e:
+        logger.error(f"Error creating database engine: {str(e)}")
+        raise
 
-
-# Asegurarse de que DATABASE_URL sea una cadena de texto
-
-
-# Crear el motor de la base de datos
-# Nota: `check_same_thread` es específico de SQLite y se debe usar solo si es necesario
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {})
+# Crear el motor de la base de datos usando la función
+engine = create_db_engine()
 
 # Configurar el SessionLocal
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Crear una clase base para los modelos
-Base = sqlalchemy.orm.declarative_base()
+Base = declarative_base()
 
 # Función para obtener una sesión de base de datos
 def get_db():
