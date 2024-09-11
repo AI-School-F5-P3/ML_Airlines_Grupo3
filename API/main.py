@@ -1,11 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models_db, schemas_db
-from database import engine, get_db
 import joblib  
 import os
 from dotenv import load_dotenv
 import crud
+from database import engine, Base, get_db
+
+Base.metadata.create_all(bind=engine)
 
 
 
@@ -71,6 +73,9 @@ def predict_satisfaction(passenger: schemas_db.Questions_passenger_satisfactionC
             passenger.arrival_delay_in_minutes
         ]
     ]
+
+    # Cargar el modelo de Machine Learning
+    model = joblib.load(MODEL_PATH)
 
     # Hacer la predicción
     try:

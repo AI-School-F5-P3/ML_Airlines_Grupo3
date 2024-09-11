@@ -5,10 +5,14 @@ from sqlalchemy.orm import sessionmaker
 from database import Base, get_db
 from main import app
 from schemas_db import CustomerType, TravelType, TripClass, Satisfaction
+from models_db import Questions_passenger_satisfaction
 
 # Configuración de la base de datos de prueba en memoria
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Sobrescribir la dependencia de la base de datos en la aplicación
@@ -49,12 +53,13 @@ example_passenger = {
     "satisfaction": Satisfaction.SATISFIED
 }
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def setup_module():
     """ Fixture que crea las tablas una vez por sesión completa de prueba. """
     Base.metadata.create_all(bind=engine)
+    print("Tables created:", Base.metadata.tables.keys())  # Depuración
     yield
-    # No es necesario eliminar las tablas al final si las quieres reutilizar
+    Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture
 def db_session():
@@ -62,6 +67,10 @@ def db_session():
     connection = engine.connect()
     transaction = connection.begin()
     session = TestingSessionLocal(bind=connection)
+    
+    # Asegurarse de que las tablas existen
+    Base.metadata.create_all(bind=connection)
+    
     yield session
     session.close()
     transaction.rollback()
@@ -73,6 +82,12 @@ def clear_tables(db_session):
     for table in reversed(Base.metadata.sorted_tables):
         db_session.execute(table.delete())
     db_session.commit()
+    
+def test_table_exists(db_session):
+    """Verifica que la tabla passenger_satisfaction existe."""
+    from sqlalchemy import inspect
+    inspector = inspect(engine)
+    assert "passenger_satisfaction" in inspector.get_table_names()
 
 # Pruebas agrupadas en una clase
 class TestPassengerSatisfaction:
