@@ -19,7 +19,7 @@ class Satisfaction(str, Enum):
     SATISFIED = "Satisfied"
 
 class Questions_passenger_satisfaction_Base(BaseModel):
-    gender: int = Field(..., ge=0, le=1, description="0 for Female, 1 for Male")  # Integer
+    gender: int = Field(..., ge=0, le=1, description="0 for Female, 1 for Male")
     customer_type: CustomerType
     age: int = Field(..., ge=0, le=120)
     travel_type: TravelType
@@ -40,7 +40,7 @@ class Questions_passenger_satisfaction_Base(BaseModel):
     inflight_service: int = Field(..., ge=0, le=5)
     cleanliness: int = Field(..., ge=0, le=5)
     departure_delay_in_minutes: int = Field(..., ge=0)
-    arrival_delay_in_minutes: int = Field(..., ge=0)
+    # arrival_delay_in_minutes: int = Field(..., ge=0)
     satisfaction: Satisfaction
 
 class Questions_passenger_satisfactionCreate(Questions_passenger_satisfaction_Base):
@@ -68,11 +68,12 @@ class Questions_passenger_satisfactionUpdate(BaseModel):
     inflight_service: int | None = Field(None, ge=0, le=5)
     cleanliness: int | None = Field(None, ge=0, le=5)
     departure_delay_in_minutes: int | None = Field(None, ge=0)
-    arrival_delay_in_minutes: int | None = Field(None, ge=0)
+    # arrival_delay_in_minutes: int | None = Field(None, ge=0)
     satisfaction: Satisfaction | None = None
 
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int
+    predicted_satisfaction: Satisfaction
 
     class Config:
         orm_mode = True
