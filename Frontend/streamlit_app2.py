@@ -6,22 +6,22 @@ from enum import Enum
 API_URL = "http://localhost:8000"
 
 # Definiciones de Enum para coincidir con el esquema
-class CustomerType(str, Enum):
-    LOYAL = "Loyal Customer"
-    DISLOYAL = "Disloyal Customer"
+# class CustomerType(str, Enum):
+#     LOYAL = "Loyal Customer"
+#     DISLOYAL = "Disloyal Customer"
 
-class TravelType(str, Enum):
-    PERSONAL = "Personal Travel"
-    BUSINESS = "Business Travel"
+# class TravelType(str, Enum):
+#     PERSONAL = "Personal Travel"
+#     BUSINESS = "Business Travel"
 
-class TripClass(str, Enum):
-    ECO = "Eco"
-    ECO_PLUS = "Eco Plus"
-    BUSINESS = "Business"
+# class TripClass(str, Enum):
+#     ECO = "Eco"
+#     ECO_PLUS = "Eco Plus"
+#     BUSINESS = "Business"
 
-class Satisfaction(str, Enum):
-    NEUTRAL = "Neutral or Dissatisfied"
-    SATISFIED = "Satisfied"
+# class Satisfaction(str, Enum):
+#     NEUTRAL = "Neutral or Dissatisfied"
+#     SATISFIED = "Satisfied"
 
 # Configuración de la página
 st.set_page_config(page_title="Satisfacción del Pasajero", page_icon="✈️")
@@ -50,20 +50,24 @@ gender = st.selectbox("Seleccione Género:", ['Female', 'Male'])
 input_data = {'gender': 0 if gender == 'Female' else 1}
 
 # Selección para el tipo de cliente
-customer_type = st.selectbox("Seleccione Tipo de Cliente:", [CustomerType.LOYAL.value, CustomerType.DISLOYAL.value])
-input_data['customer_type'] = customer_type
+customer_type = st.selectbox("Seleccione Tipo de Cliente:", ['Loyal Customer','Disloyal Customer'])
+input_data = {'customer_type': 0 if customer_type == 'Disloyal Customer' else 1}
 
 # Entrada para la edad (0 a 120)
 age = st.slider("Seleccione Edad:", 0, 120, 25)
 input_data['age'] = age
 
 # Selección para el tipo de viaje
-travel_type = st.selectbox("Seleccione Tipo de Viaje:", [TravelType.PERSONAL.value, TravelType.BUSINESS.value])
-input_data['travel_type'] = travel_type
+travel_type = st.selectbox("Seleccione Tipo de Viaje:", ['Personal Travel', 'Business Travel'])
+input_data = {'travel_type': 0 if customer_type == 'Personal Travel' else 1}
 
 # Selección para la clase
-trip_class = st.selectbox("Seleccione Clase:", [TripClass.ECO.value, TripClass.ECO_PLUS.value, TripClass.BUSINESS.value])
-input_data['trip_class'] = trip_class
+trip_class = st.selectbox("Seleccione Clase:", ['Eco', 'Eco Plus', 'Business'])
+input_data = {
+    'trip_class': 0 if trip_class == 'Business' 
+                  else 1 if trip_class == 'Eco' 
+                  else 2  
+}
 
 # Entrada para la distancia de vuelo (0 a 10000)
 flight_distance = st.slider("Distancia de Vuelo (km):", 0, 10000, 500)
@@ -92,13 +96,14 @@ input_data['cleanliness'] = get_satisfaction("Limpieza")
 departure_delay = st.slider("Retraso en la Salida (en minutos):", 0, 1000, 0)
 input_data['departure_delay_in_minutes'] = departure_delay
 
-# Entrada para el retraso de llegada (en minutos)
-arrival_delay = st.slider("Retraso en la Llegada (en minutos):", 0, 1000, 0)
-input_data['arrival_delay_in_minutes'] = arrival_delay
+# # Entrada para el retraso de llegada (en minutos)
+# arrival_delay = st.slider("Retraso en la Llegada (en minutos):", 0, 1000, 0)
+# input_data['arrival_delay_in_minutes'] = arrival_delay
 
 # Entrada para la satisfacción del cliente
-satisfaction_client = st.selectbox("¿Está satisfecho con el servicio?", [Satisfaction.NEUTRAL.value, Satisfaction.SATISFIED.value])
-input_data['satisfaction'] = satisfaction_client
+satisfaction_client = st.selectbox("¿Está satisfecho con el servicio?", ['Neutral or Dissatisfied', 'Satisfied'])
+input_data = {'satisfaction_client': 0 if satisfaction_client == 'Neutral or Dissatisfied' else 1}
+
 
 # --- Función para enviar datos a la API y obtener predicción ---
 def send_data_to_api(data):

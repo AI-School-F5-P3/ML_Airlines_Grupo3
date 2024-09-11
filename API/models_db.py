@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer
 from database import Base
 
 class Questions_passenger_satisfaction(Base):
@@ -6,10 +6,10 @@ class Questions_passenger_satisfaction(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     gender = Column(Integer)  # 0 para Female, 1 para Male
-    customer_type = Column(String)
+    customer_type = Column(Integer) # 0 para Disloyal, 1 para Loyal
     age = Column(Integer)
-    travel_type = Column(String)
-    trip_class = Column(String)
+    travel_type = Column(Integer)
+    trip_class = Column(Integer)
     flight_distance = Column(Integer)
     inflight_wifi_service = Column(Integer)
     departure_arrival_time_convenient = Column(Integer)
@@ -26,5 +26,4 @@ class Questions_passenger_satisfaction(Base):
     inflight_service = Column(Integer)
     cleanliness = Column(Integer)
     departure_delay_in_minutes = Column(Integer)
-    arrival_delay_in_minutes = Column(Integer)
-    satisfaction = Column(String)
+    satisfaction = Column(Integer)

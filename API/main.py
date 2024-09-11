@@ -75,7 +75,7 @@ def predict_satisfaction(passenger: schemas_db.Questions_passenger_satisfactionC
             passenger.inflight_service,
             passenger.cleanliness,
             passenger.departure_delay_in_minutes,
-            passenger.arrival_delay_in_minutes
+            
         ]
     ]
 

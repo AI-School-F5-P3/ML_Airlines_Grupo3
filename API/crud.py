@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def create_passenger_satisfaction(db: Session, passenger: schemas_db.Questions_passenger_satisfactionCreate) -> models_db.Questions_passenger_satisfaction:
     try:
-        db_passenger = models_db.Questions_passenger_satisfaction(**passenger.dict())
+        db_passenger = models_db.Questions_passenger_satisfaction(**passenger.model_dump())
         db.add(db_passenger)
         db.commit()
         db.refresh(db_passenger)
@@ -42,7 +42,7 @@ def update_passenger_satisfaction(db: Session, passenger_id: int, passenger: sch
             logger.info(f"Attempted to update non-existent passenger with id {passenger_id}")
             return None
         
-        update_data = passenger.dict(exclude_unset=True)
+        update_data = passenger.model_dump(exclude_unset=True)
         for key, value in update_data.items():
             if value is not None:  # Solo actualizar si el valor no es None
                 setattr(db_passenger, key, value)
