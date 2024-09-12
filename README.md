@@ -1,6 +1,6 @@
-![](./assets/logo.png)
-
 # ML_Airlines_Grupo3
+
+![](./assets/logo.png)
 
 ## 📁 **Estructura del Proyecto**
 
