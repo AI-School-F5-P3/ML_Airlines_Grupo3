@@ -8,9 +8,21 @@ import joblib
 import os
 from dotenv import load_dotenv
 import logging
+from logging.handlers import RotatingFileHandler
 
 # Configuración de logging
-logging.basicConfig(level=logging.INFO)
+
+log_directory = "logs"
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        RotatingFileHandler(os.path.join(log_directory, "app.log"), maxBytes=10000000, backupCount=5),
+                        logging.StreamHandler()
+                    ])
+
 logger = logging.getLogger(__name__)
 
 # Cargar variables de entorno
@@ -159,5 +171,6 @@ def reload_model():
         raise HTTPException(status_code=500, detail="Error reloading model")
 
 if __name__ == "__main__":
+    logger.info("Starting the FastAPI application")
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
