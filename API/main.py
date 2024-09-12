@@ -18,18 +18,18 @@ models_db.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 MODEL_PATH = os.getenv("MODEL_PATH", "rf_model.pkl")
-print(f"Trying to load model from: {MODEL_PATH}")
+logger.info(f"Trying to load model from: {MODEL_PATH}")
 
 try:
     model = joblib.load(MODEL_PATH)
-    print("Model loaded successfully")
+    logger.info("Model loaded successfully")
 except Exception as e:
-    print(f"Error loading model: {str(e)}")
+    logger.error(f"Error loading model: {str(e)}")
     model = None
 
 @app.post("/submit_and_predict/", response_model=schemas_db.Questions_passenger_satisfaction)
 def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCreate, db: Session = Depends(get_db)):
-    logger.debug(f"Received passenger data: {passenger}")
+    logger.info(f"Received passenger data: {passenger}")
     if model is None:
         logger.error("Model not loaded")
         raise HTTPException(status_code=500, detail="Model not loaded")
@@ -61,26 +61,32 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
                 passenger.departure_delay_in_minutes,
             ]
         ]
-        logger.debug(f"Prepared passenger data: {passenger_data}")
+        logger.info(f"Prepared passenger data: {passenger_data}")
 
+        # Realizar la predicción
         prediction = model.predict(passenger_data)
         predicted_satisfaction = "Satisfied" if prediction[0] == 1 else "Neutral or Dissatisfied"
-        logger.debug(f"Prediction: {predicted_satisfaction}")
+        logger.info(f"Prediction: {predicted_satisfaction}")
         
         # Crear el objeto de pasajero con la predicción
-        passenger_dict = passenger.model_dump()
-        passenger_dict['predicted_satisfaction'] = predicted_satisfaction
+        passenger_with_prediction = schemas_db.Questions_passenger_satisfactionCreateWithPrediction(
+            **passenger.model_dump(),
+            predicted_satisfaction=schemas_db.Satisfaction(predicted_satisfaction)
+        )
+        logger.info(f"Passenger data with prediction: {passenger_with_prediction}")
         
         # Guardar en la base de datos
-        db_passenger = crud.create_passenger_satisfaction(db=db, passenger=schemas_db.Questions_passenger_satisfactionCreate(**passenger_dict))
-        logger.debug("Passenger data saved to database")
+        db_passenger = crud.create_passenger_satisfaction(db=db, passenger=passenger_with_prediction)
+        logger.info(f"Passenger data saved to database: {db_passenger.__dict__}")
         
-        # Ensure that the returned object matches the response model
-        return schemas_db.Questions_passenger_satisfaction(
+        # Asegurar que el objeto devuelto coincide con el modelo de respuesta
+        response = schemas_db.Questions_passenger_satisfaction(
             id=db_passenger.id,
-            predicted_satisfaction=schemas_db.Satisfaction(predicted_satisfaction),
+            predicted_satisfaction=schemas_db.Satisfaction(db_passenger.predicted_satisfaction),
             **passenger.model_dump()
         )
+        logger.info(f"Response: {response}")
+        return response
     except Exception as e:
         logger.exception("Error occurred during prediction or database operation")
         raise HTTPException(status_code=500, detail=f"Error making prediction: {str(e)}")
