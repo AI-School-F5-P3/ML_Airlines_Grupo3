@@ -56,3 +56,6 @@ dist/
 build/
 *.egg-in
 
+#db
+API/satisfation.db
+
