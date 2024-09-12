@@ -11,7 +11,7 @@
 ├── documentation/            # Documentación del proyecto
 ├── frontend/                 # Archivos del frontend, interfaz de usuario
 ├── metrics/                  # Archivos relacionados con métricas y evaluación
-├── models_ml/                   # Modelos entrenados y relacionados
+├── models_ml/                # Modelos entrenados y relacionados
 ├── notebooks/                # Jupyter Notebooks para análisis y experimentación
 ├── tests/                    # Pruebas automatizadas del proyecto
 ├── .gitignore                # Ignorar archivos y carpetas en git
