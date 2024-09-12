@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Cargar los datos
-df = pd.read_csv('metrics/model_metrics_ok.csv')
+df = pd.read_csv('models_ml/metrics/model_metrics_ok.csv')
 
 # Crear el gráfico de barras para AUC
 plt.figure(figsize=(10, 6))
@@ -23,5 +23,5 @@ for bar in bars:
              ha='center', va='bottom')
 
 plt.tight_layout()
-plt.savefig('comparacion_auc_roc.png')
+plt.savefig('models_ml/graphics/comparacion_auc_roc.png')
 plt.show()

@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Cargar los datos del archivo CSV
-df = pd.read_csv('metrics/model_metrics_ok.csv')
+df = pd.read_csv('models_ml/metrics/model_metrics_ok.csv')
 
 # Definir las métricas a graficar
 metrics = ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC']
@@ -37,6 +37,6 @@ plt.subplots_adjust(bottom=0.2)
 ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=len(metrics))
 
 # Guardar el gráfico
-plt.savefig('modelo_comparacion_ajustado.png')
+plt.savefig('models_ml/graphics/modelo_comparacion_ajustado.png')
 plt.close()
 
