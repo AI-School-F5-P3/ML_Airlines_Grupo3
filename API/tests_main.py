@@ -63,7 +63,7 @@ def test_create_passenger_satisfaction(db_session):
     db_passenger = create_passenger_satisfaction(db_session, passenger)
     assert db_passenger.id is not None
     assert db_passenger.gender == passenger_data["gender"]
-    assert db_passenger.satisfaction == passenger_data["satisfaction"]
+    assert db_passenger.satisfaction == schemas_db.Satisfaction(passenger_data["satisfaction"])
 
 def test_get_passenger_satisfaction(db_session):
     # First, create a passenger
@@ -99,7 +99,7 @@ def test_get_passenger_satisfaction(db_session):
     assert retrieved_passenger is not None
     assert retrieved_passenger.id == db_passenger.id
     assert retrieved_passenger.gender == passenger_data["gender"]
-    assert retrieved_passenger.satisfaction == passenger_data["satisfaction"]
+    assert retrieved_passenger.satisfaction == schemas_db.Satisfaction(passenger_data["satisfaction"])
 
 def test_submit_and_predict():
     passenger_data = {
@@ -127,15 +127,16 @@ def test_submit_and_predict():
         "satisfaction": "Satisfied"
     }
     response = client.post("/submit_and_predict/", json=passenger_data)
-    assert response.status_code == 200
+    print(f"Response status code: {response.status_code}")
+    print(f"Response content: {response.content}")
+    assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
     result = response.json()
-    assert "id" in result
-    assert "predicted_satisfaction" in result
-    assert result["predicted_satisfaction"] in ["Satisfied", "Neutral or Dissatisfied"]
+    assert "id" in result, "Response should contain an 'id' field"
+    assert "predicted_satisfaction" in result, "Response should contain a 'predicted_satisfaction' field"
+    assert result["predicted_satisfaction"] in ["Satisfied", "Neutral or Dissatisfied"], f"Unexpected prediction: {result['predicted_satisfaction']}"
 
 def test_model_loaded():
     assert model is not None, "Model should be loaded"
 
 if __name__ == "__main__":
     pytest.main(["-v", "test_main.py"])
-    
