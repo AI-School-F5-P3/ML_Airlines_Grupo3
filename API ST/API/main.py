@@ -68,8 +68,8 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
         logger.debug(f"Prediction: {predicted_satisfaction}")
         
         # Crear el objeto de pasajero con la predicción
-        passenger_dict = passenger.dict()
-        passenger_dict['predicted_satisfaction'] = predicted_satisfaction
+        passenger_model_dump = passenger.model_dump()
+        passenger_model_dump['predicted_satisfaction'] = predicted_satisfaction
         
         # Guardar en la base de datos
         db_passenger = crud.create_passenger_satisfaction(db=db, passenger=passenger, predicted_satisfaction=predicted_satisfaction)
@@ -80,7 +80,7 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
         return schemas_db.Questions_passenger_satisfaction(
             id=db_passenger.id,
             predicted_satisfaction=schemas_db.Satisfaction(predicted_satisfaction),
-            **passenger.dict()
+            **passenger.model_dump()
         )
     except Exception as e:
         logger.exception("Error occurred during prediction or database operation")

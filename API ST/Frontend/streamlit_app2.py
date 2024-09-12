@@ -23,16 +23,6 @@ class Satisfaction(str, Enum):
 
 st.set_page_config(page_title="Satisfacción del Pasajero", page_icon="✈️")
 
-page_bg_img = '''
-<style>
-.stApp {
-background-image: url("https://images.unsplash.com/photo-1709834753459-2ad6f9034b5f?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-background-size: cover;
-}
-</style>
-'''
-
-st.markdown(page_bg_img, unsafe_allow_html=True)
 
 st.title("📋 Formulario de Satisfacción del Pasajero 🛫😊")
 
