@@ -46,6 +46,8 @@ class Questions_passenger_satisfaction_Base(BaseModel):
 class Questions_passenger_satisfactionCreate(Questions_passenger_satisfaction_Base):
     pass
 
+
+    
 class Questions_passenger_satisfactionUpdate(BaseModel):
     gender: int | None = Field(None, ge=0, le=1)
     customer_type: CustomerType | None = None
@@ -70,7 +72,8 @@ class Questions_passenger_satisfactionUpdate(BaseModel):
     departure_delay_in_minutes: int | None = Field(None, ge=0)
     # arrival_delay_in_minutes: int | None = Field(None, ge=0)
     satisfaction: Satisfaction | None = None
-
+class Questions_passenger_satisfactionCreateWithPrediction(Questions_passenger_satisfactionCreate):
+    predicted_satisfaction: Satisfaction
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int
     predicted_satisfaction: Satisfaction
