@@ -33,21 +33,29 @@ def get_all_passenger_satisfaction(db: Session, skip: int = 0, limit: int = 100)
         logger.error(f"Error retrieving all passenger satisfaction records: {str(e)}")
         raise
 
-def update_passenger_satisfaction(db: Session, passenger_id: int, passenger: schemas_db.Questions_passenger_satisfactionUpdate):
+
+def update_passenger_satisfaction(db: Session, passenger_id: int, predicted_satisfaction: str) -> models_db.Questions_passenger_satisfaction:
     try:
+        # Buscar el registro en la base de datos
         db_passenger = db.query(models_db.Questions_passenger_satisfaction).filter(models_db.Questions_passenger_satisfaction.id == passenger_id).first()
-        if db_passenger:
-            update_data = passenger.dict(exclude_unset=True)
-            for key, value in update_data.items():
-                setattr(db_passenger, key, value)
-            db.commit()
-            db.refresh(db_passenger)
-            logger.info(f"Updated passenger satisfaction record with id {passenger_id}")
+
+        if db_passenger is None:
+            raise Exception(f"Passenger with id {passenger_id} not found.")
+
+        # Actualizar el campo predicted_satisfaction
+        db_passenger.predicted_satisfaction = predicted_satisfaction
+
+        # Confirmar los cambios en la base de datos
+        db.commit()
+        db.refresh(db_passenger)
+        logger.info(f"Updated passenger satisfaction record with id {db_passenger.id}")
         return db_passenger
     except SQLAlchemyError as e:
         logger.error(f"Error updating passenger satisfaction record: {str(e)}")
         db.rollback()
         raise
+
+
 
 def delete_passenger_satisfaction(db: Session, passenger_id: int):
     try:

@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -76,7 +77,7 @@ class Questions_passenger_satisfactionCreate(Questions_passenger_satisfaction_Ba
     pass
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int
-    predicted_satisfaction: str | None
+    predicted_satisfaction: Satisfaction
 
     class Config:
         orm_mode = True
