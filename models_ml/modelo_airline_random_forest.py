@@ -113,11 +113,11 @@ scaler = StandardScaler()
 encoder = OneHotEncoder()
 
 # Guardar el modelo en un archivo
-joblib.dump(best_rf_model, 'models/rf_model.pkl')
+joblib.dump(best_rf_model, 'models_ml/pkls/rf_model.pkl')
 print("Modelo guardado como rf_model.pkl")
-joblib.dump(encoder, 'models/encoder.pkl')
+joblib.dump(encoder, 'models_ml/pkls/encoder.pkl')
 print("Encoder guardado como encoder.pkl")
-joblib.dump(scaler, 'models/scaler.pkl')
+joblib.dump(scaler, 'models_ml/pkls/scaler.pkl')
 print("Scaler guardado como scaler.pkl")
 
 
@@ -130,15 +130,15 @@ metricsdf = pd.DataFrame({
     'ROC AUC': [roc_auc],
     'Best Parameters': [grid_search_rf.best_params_],
 })
-metricsdf.to_csv('rf_classification_results.csv', index=False)
+
 #Carga de df
 try:
-    existing_metrics = pd.read_csv('metrics/model_metrics.csv')
+    existing_metrics = pd.read_csv('models_ml/metrics/model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
 except FileNotFoundError:
     updated_metrics = metricsdf
 
-updated_metrics.to_csv('metrics/model_metrics.csv', index=False)
+updated_metrics.to_csv('models_ml/metrics/model_metrics.csv', index=False)
 print("Métricas guardadas en 'model_metrics.csv'")
 plt.figure()
 plt.plot(fpr_rf, tpr_rf, color='blue', lw=2, label=f'Random Forest (AUC = {roc_auc:.2f})')
@@ -149,6 +149,6 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('Curva ROC Random Forest')
 plt.legend(loc="lower right")
-plt.savefig('roc_curve_rf.png')
+plt.savefig('models_ml/graphics/roc_curve_rf.png')
 plt.close()
 

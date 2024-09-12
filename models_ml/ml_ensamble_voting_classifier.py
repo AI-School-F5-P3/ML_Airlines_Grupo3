@@ -70,7 +70,7 @@ recall = recall_score(y_test, y_pred, average='binary')
 f1 = f1_score(y_test, y_pred, average='binary')
 
 # Guardar el modelo en un archivo
-joblib.dump(ensemble_model, 'models/ensemble_model.pkl')
+joblib.dump(ensemble_model, 'models_ml/pkls/ensemble_model.pkl')
 print("Modelo guardado como ensemble_model.pkl")
 
 # Métricas
@@ -89,12 +89,12 @@ metricsdf = pd.DataFrame({
 
 # Cargar métricas existentes (si las hay) y guardar en un archivo CSV
 try:
-    existing_metrics = pd.read_csv('metrics/model_metrics.csv')
+    existing_metrics = pd.read_csv('models_ml/metrics/model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, metricsdf], ignore_index=True)
 except FileNotFoundError:
     updated_metrics = metricsdf
 
-updated_metrics.to_csv('metrics/model_metrics.csv', index=False)
+updated_metrics.to_csv('models_ml/metrics/model_metrics.csv', index=False)
 print("Métricas guardadas en 'model_metrics.csv'")
 
 # Visualización
@@ -103,7 +103,7 @@ sns.barplot(x=['Accuracy', 'Precision', 'Recall', 'F1_Score', 'AUC_ROC'],
             y=[accuracy, precision, recall, f1, roc_auc])
 plt.title('Métricas del Ensemble Model')
 plt.ylim(0, 1)
-plt.savefig('metrics/em_metrics.png')
+plt.savefig('models_ml/graphics/em_metrics.png')
 plt.close()
 print("Gráfico de métricas guardado como 'em_metrics.png'")
 
@@ -117,5 +117,5 @@ plt.xlabel('Tasa de Falsos Positivos')
 plt.ylabel('Tasa de Verdaderos Positivos')
 plt.title('Curva ROC EM')
 plt.legend(loc="lower right")
-plt.savefig('roc_curve_em.png')
+plt.savefig('models_ml/graphics/roc_curve_em.png')
 plt.close()

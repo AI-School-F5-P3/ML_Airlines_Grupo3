@@ -79,7 +79,7 @@ print(f'ROC AUC: {roc_auc:.4f}')
 print(f'Matriz de confusión:\n{conf_matrix}')
 
 # Guardar el modelo en un archivo
-joblib.dump(best_lr_model, 'models/lr_model.pkl')
+joblib.dump(best_lr_model, 'models_ml/pkls/lr_model.pkl')
 print("Modelo guardado como lr_model.pkl")
 
 # Guardar resultados
@@ -95,12 +95,12 @@ results = pd.DataFrame({
 
 # Actualizar el archivo CSV de métricas
 try:
-    existing_metrics = pd.read_csv('metrics/model_metrics.csv')
+    existing_metrics = pd.read_csv('models_ml/metrics/model_metrics.csv')
     updated_metrics = pd.concat([existing_metrics, results], ignore_index=True)
 except FileNotFoundError:
     updated_metrics = results
 
-updated_metrics.to_csv('metrics/model_metrics.csv', index=False)
+updated_metrics.to_csv('models_ml/metrics/model_metrics.csv', index=False)
 print("Métricas guardadas en 'model_metrics.csv'")
 
 # Dibujar y guardar la curva ROC
@@ -113,6 +113,6 @@ plt.xlabel('Tasa de Falsos Positivos')
 plt.ylabel('Tasa de Verdaderos Positivos')
 plt.title('Curva ROC (Logistic Regression)')
 plt.legend(loc="lower right")
-plt.savefig('roc_curve_lr.png')
+plt.savefig('models_ml/graphics/roc_curve_lr.png')
 plt.close()
 print("Curva ROC guardada como 'roc_curve_lr.png'")
