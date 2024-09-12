@@ -1,5 +1,5 @@
 # ML_Airlines_Grupo3
-
+.venv\Scripts\activate
 ## 📁 **Estructura del Proyecto**
 
 ```bash
