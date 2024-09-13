@@ -1,15 +1,17 @@
 # ML_Airlines_Grupo3
-.venv\Scripts\activate
+
+![](./assets/logo.png)
+
 ## 📁 **Estructura del Proyecto**
 
 ```bash
 .
-├── app/                      # Código de la aplicación principal
+├── assets/                   # Recursos gráficos
 ├── data/                     # Datos usados para el análisis y predicciones
 ├── documentation/            # Documentación del proyecto
 ├── frontend/                 # Archivos del frontend, interfaz de usuario
 ├── metrics/                  # Archivos relacionados con métricas y evaluación
-├── models/                   # Modelos entrenados y relacionados
+├── models_ml/                # Modelos entrenados y relacionados
 ├── notebooks/                # Jupyter Notebooks para análisis y experimentación
 ├── tests/                    # Pruebas automatizadas del proyecto
 ├── .gitignore                # Ignorar archivos y carpetas en git
