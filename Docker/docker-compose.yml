@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./API
+    container_name: fastapi_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./API:/app
+    env_file:
+      - ./API/.env
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: streamlit_service
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./Frontend:/app
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
