@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+import numpy as np
 from sqlalchemy.orm import Session
 import models_db, schemas_db
 from database import engine, get_db
@@ -63,16 +64,20 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
         ]
         logger.debug(f"Prepared passenger data: {passenger_data}")
 
-        prediction = model.predict(passenger_data)
-        predicted_satisfaction = "Satisfied" if prediction[0] == 1 else "Neutral or Dissatisfied"
-        logger.debug(f"Prediction: {predicted_satisfaction}")
+        prediction_proba = model.predict_proba(passenger_data)
+        predicted_class = np.argmax(prediction_proba)
+        prediction_accuracy = prediction_proba[0][predicted_class]
         
-        # Crear el objeto de pasajero con la predicción
+        predicted_satisfaction = "Satisfied" if predicted_class == 1 else "Neutral or Dissatisfied"
+        logger.debug(f"Prediction: {predicted_satisfaction}, Accuracy: {prediction_accuracy:.2f}")
+        
+        # Crear el objeto de pasajero con la predicción y la precisión
         passenger_dict = passenger.dict()
         passenger_dict['predicted_satisfaction'] = predicted_satisfaction
+        passenger_dict['prediction_accuracy'] = float(prediction_accuracy)
         
         # Guardar en la base de datos
-        db_passenger = crud.create_passenger_satisfaction(db=db, passenger=passenger, predicted_satisfaction=predicted_satisfaction)
+        db_passenger = crud.create_passenger_satisfaction(db=db, passenger=passenger, predicted_satisfaction=predicted_satisfaction, prediction_accuracy=prediction_accuracy)
 
         logger.debug("Passenger data saved to database")
         
@@ -80,6 +85,7 @@ def submit_and_predict(passenger: schemas_db.Questions_passenger_satisfactionCre
         return schemas_db.Questions_passenger_satisfaction(
             id=db_passenger.id,
             predicted_satisfaction=schemas_db.Satisfaction(predicted_satisfaction),
+            prediction_accuracy=float(prediction_accuracy),
             **passenger.dict()
         )
     except Exception as e:

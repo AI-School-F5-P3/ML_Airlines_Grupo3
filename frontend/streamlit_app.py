@@ -23,17 +23,6 @@ class Satisfaction(str, Enum):
 
 st.set_page_config(page_title="Satisfacción del Pasajero", page_icon="✈️")
 
-page_bg_img = '''
-<style>
-.stApp {
-background-image: url("https://www.aviationgroup.es/wp-content/uploads/2019/04/1132-e1591699339327.jpg);
-background-size: cover;
-}
-</style>
-'''
-
-st.markdown(page_bg_img, unsafe_allow_html=True)
-
 st.title("📋 Formulario de Satisfacción del Pasajero 🛫😊")
 
 st.write("¡Por favor, llena los siguientes campos para ayudarnos a mejorar! 🙏")
@@ -98,7 +87,8 @@ if st.button("Guardar Datos y Predecir"):
     result = send_data_to_api(input_data)
     if result:
         st.success("Datos Guardados Exitosamente")
-        st.success(f"La predicción de satisfacción del cliente es: {result['predicted_satisfaction']}")
+        st.success(f"Nuestro modelo, con una exactitud del {int(result['prediction_accuracy']*100)}%, predice el estatus: {result['predicted_satisfaction']}")
+        # st.success(f"Precisión de la predicción: {result['prediction_accuracy']:.2f}")
         st.info(f"La satisfacción real del cliente es: {result['satisfaction']}")
         
         if result['predicted_satisfaction'] == result['satisfaction']:

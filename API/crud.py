@@ -6,8 +6,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def create_passenger_satisfaction(db: Session, passenger: schemas_db.Questions_passenger_satisfactionCreate, predicted_satisfaction: str | None = None):
-    db_passenger = models_db.Questions_passenger_satisfaction(**passenger.model_dump(), predicted_satisfaction=predicted_satisfaction)
+def create_passenger_satisfaction(db: Session, passenger: schemas_db.Questions_passenger_satisfactionCreate, predicted_satisfaction: str, prediction_accuracy: float):
+    db_passenger = models_db.Questions_passenger_satisfaction(**passenger.dict(), predicted_satisfaction=predicted_satisfaction, prediction_accuracy=prediction_accuracy)
     db.add(db_passenger)
     db.commit()
     db.refresh(db_passenger)

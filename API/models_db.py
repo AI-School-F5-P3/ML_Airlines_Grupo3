@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from database import Base
 
 class Questions_passenger_satisfaction(Base):
@@ -28,3 +28,4 @@ class Questions_passenger_satisfaction(Base):
     departure_delay_in_minutes = Column(Integer)
     satisfaction = Column(String)
     predicted_satisfaction = Column(String)
+    prediction_accuracy = Column(Float)

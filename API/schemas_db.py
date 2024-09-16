@@ -77,6 +77,6 @@ class Questions_passenger_satisfactionCreate(Questions_passenger_satisfaction_Ba
 class Questions_passenger_satisfaction(Questions_passenger_satisfaction_Base):
     id: int
     predicted_satisfaction: str | None
-
+    prediction_accuracy: float | None
     class Config:
         orm_mode = True
