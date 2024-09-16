@@ -78,8 +78,6 @@ recall = recall_score(y_test, y_pred, pos_label=1)
 f1 = f1_score(y_test, y_pred, pos_label=1)
 
 
-# Evaluar el modelo utilizando validación cruzada
-cv_scores_rf = cross_val_score(rf_model, X_full, y_full, cv=kf, scoring='accuracy')
 
 # Evaluar el modelo en el conjunto de entrenamiento
 y_pred_train = best_rf_model.predict(X_train)
@@ -94,10 +92,7 @@ f1_train = f1_score(y_train, y_pred_train, pos_label=1)
 print(f"Entrenamiento: Accuracy: {accuracy_train:.2f}, Precision: {precision_train:.2f}, Recall: {recall_train:.2f}, F1 Score: {f1_train:.2f}")
 print(f"Prueba: Accuracy: {accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1 Score: {f1:.2f}")
 
-# Imprimir los resultados
-print("Random Forest Cross-Validation Accuracy Scores:", cv_scores_rf)
-print("Random Forest Mean Accuracy:", cv_scores_rf.mean())
-print("Random Forest Standard Deviation:", cv_scores_rf.std())
+
 
 # Plot ROC Curve for Random Forest
 fpr_rf, tpr_rf, _ = roc_curve(y_test, best_rf_model.predict_proba(X_test)[:, 1])
@@ -108,17 +103,12 @@ accuracy = accuracy_score(y_test, y_pred_rf)
 print(f"La exactitud del modelo Random Forest es de {accuracy * 100:.2f}%")
 
 
-#Se definen variables a los efectos de exportar el modelo
-scaler = StandardScaler()
-encoder = OneHotEncoder()
+
 
 # Guardar el modelo en un archivo
 joblib.dump(best_rf_model, 'models_ml/pkls/rf_model.pkl')
 print("Modelo guardado como rf_model.pkl")
-joblib.dump(encoder, 'models_ml/pkls/encoder.pkl')
-print("Encoder guardado como encoder.pkl")
-joblib.dump(scaler, 'models_ml/pkls/scaler.pkl')
-print("Scaler guardado como scaler.pkl")
+
 
 
 metricsdf = pd.DataFrame({
