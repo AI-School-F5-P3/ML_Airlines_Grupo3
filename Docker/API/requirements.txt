@@ -1,6 +1,0 @@
-﻿fastapi
-uvicorn
-scikit-learn
-pydantic
-sqlalchemy
-python-dotenv
