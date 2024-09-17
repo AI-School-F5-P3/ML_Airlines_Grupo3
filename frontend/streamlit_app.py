@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from enum import Enum
 
-API_URL = "http://localhost:8000"
+API_URL = "http://fastapi_service:8000" # Sin docker cambiar fastapi_service:8000 por localhost:8080
 
 class CustomerType(str, Enum):
     LOYAL = "Loyal Customer"
